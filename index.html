@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>优质评价文案生成器</title>
+  <style>
+    :root { color-scheme: light dark; }
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif; margin: 0; padding: 0; background: #f6f8fa; }
+    .container { max-width: 720px; margin: 0 auto; padding: 24px 16px 48px; }
+    .card { background: #fff; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.08); padding: 20px; }
+    h1 { font-size: 20px; margin: 0 0 16px; }
+    label { display: block; font-size: 14px; color: #555; margin: 12px 0 6px; }
+    input[type="text"], textarea, select { width: 100%; box-sizing: border-box; padding: 10px 12px; border-radius: 8px; border: 1px solid #d0d7de; outline: none; font-size: 14px; background: #fff; }
+    textarea { min-height: 96px; resize: vertical; }
+    .row { display: flex; gap: 12px; align-items: center; }
+    .row > * { flex: 1; }
+    .actions { display: flex; gap: 12px; margin-top: 16px; }
+    button { cursor: pointer; border: none; padding: 10px 14px; border-radius: 8px; font-size: 14px; }
+    .btn-primary { background: #1677ff; color: #fff; }
+    .btn-secondary { background: #eef2ff; color: #1f2937; }
+    .result { margin-top: 16px; padding: 12px; background: #f8fafc; border: 1px solid #e5e7eb; border-radius: 8px; white-space: pre-wrap; word-break: break-word; font-size: 14px; }
+    .tips { color: #6b7280; font-size: 12px; margin-top: 6px; }
+    .muted { color: #64748b; font-size: 12px; }
+    .footer { text-align: center; color: #94a3b8; font-size: 12px; margin-top: 16px; }
+  </style>
+  <meta name="referrer" content="no-referrer">
+</head>
+<body>
+  <div class="container">
+    <div class="card">
+      <h1>优质评价文案生成器</h1>
+      <div class="tips" style="margin-bottom: 16px; padding: 8px; background: #f0f9ff; border: 1px solid #bae6fd; border-radius: 6px;">
+        🔥 已内置 DeepSeek AI，无需配置，直接使用！
+      </div>
+
+      <label>类目（可多选）</label>
+      <div style="display: flex; flex-wrap: wrap; gap: 8px; margin: 8px 0;">
+        <label style="display: flex; align-items: center; gap: 4px; font-size: 14px; color: #555; cursor: pointer;">
+          <input type="checkbox" value="剪发" style="margin: 0;"> 剪发
+        </label>
+        <label style="display: flex; align-items: center; gap: 4px; font-size: 14px; color: #555; cursor: pointer;">
+          <input type="checkbox" value="烫发" style="margin: 0;"> 烫发
+        </label>
+        <label style="display: flex; align-items: center; gap: 4px; font-size: 14px; color: #555; cursor: pointer;">
+          <input type="checkbox" value="染发" style="margin: 0;"> 染发
+        </label>
+        <label style="display: flex; align-items: center; gap: 4px; font-size: 14px; color: #555; cursor: pointer;">
+          <input type="checkbox" value="护理" style="margin: 0;"> 护理
+        </label>
+        <label style="display: flex; align-items: center; gap: 4px; font-size: 14px; color: #555; cursor: pointer;">
+          <input type="checkbox" value="造型" style="margin: 0;"> 造型
+        </label>
+      </div>
+
+      <label>服务人员（可多选）</label>
+      <div style="display: flex; flex-wrap: wrap; gap: 8px; margin: 8px 0;">
+        <label style="display: flex; align-items: center; gap: 4px; font-size: 14px; color: #555; cursor: pointer;">
+          <input type="checkbox" value="薇薇老师" style="margin: 0;"> 薇薇老师
+        </label>
+        <label style="display: flex; align-items: center; gap: 4px; font-size: 14px; color: #555; cursor: pointer;">
+          <input type="checkbox" value="赵老师" style="margin: 0;"> 赵老师
+        </label>
+        <label style="display: flex; align-items: center; gap: 4px; font-size: 14px; color: #555; cursor: pointer;">
+          <input type="checkbox" value="李老师" style="margin: 0;"> 李老师
+        </label>
+        <label style="display: flex; align-items: center; gap: 4px; font-size: 14px; color: #555; cursor: pointer;">
+          <input type="checkbox" value="洋子老师" style="margin: 0;"> 洋子老师
+        </label>
+        <label style="display: flex; align-items: center; gap: 4px; font-size: 14px; color: #555; cursor: pointer;">
+          <input type="checkbox" value="小杰" style="margin: 0;"> 小杰
+        </label>
+      </div>
+
+      <label for="prompt">提示词（描述商品/服务亮点、体验、适用场景等）</label>
+      <textarea id="prompt" placeholder="例如：技术专业、服务贴心、环境舒适、价格合理、效果满意，适合各种发质和脸型"></textarea>
+      <div class="tips">会基于提示词生成自然真实的用户评价，避免官方话术，像真人写的感受。字数随机100-240字。使用 DeepSeek AI 智能生成。</div>
+
+      <label for="shopPlatform">选择平台</label>
+      <select id="shopPlatform">
+        <option value="douyin">抖音店铺</option>
+        <option value="meituan">美团店铺</option>
+      </select>
+
+      <div class="actions">
+        <button id="btnGen" class="btn-primary">生成文案</button>
+        <button id="btnCopyGo" class="btn-secondary" disabled>复制并跳转</button>
+      </div>
+
+      <div id="result" class="result" style="display:none;"></div>
+      <div id="status" class="muted" style="margin-top:8px;"></div>
+    </div>
+    <div class="footer">使用 DeepSeek AI 智能生成，无需配置直接使用</div>
+  </div>
+
+  <script>
+    const $ = (id) => document.getElementById(id);
+    const btnGen = $("btnGen");
+    const btnCopyGo = $("btnCopyGo");
+    const result = $("result");
+    const status = $("status");
+    
+    // 平台地址配置
+    const PLATFORM_URLS = {
+      douyin: "https://fxg.jinritemai.com/ffa/mshop/homepage",
+      meituan: "https://www.meituan.com/meishi/"
+    };
+    
+    // DeepSeek 配置（内置）
+    const DEEPSEEK_CONFIG = {
+      apiBase: "https://api.deepseek.com/v1",
+      apiKey: "sk-33d4ff5bcb004f26a62cd6f17df25a78",
+      model: "deepseek-chat"
+    };
+
+    function cutToLength(text, len) {
+      if (!text) return "";
+      const t = text.replace(/\s+/g, "");
+      if (t.length <= len) return t;
+      // 保留语义，尽量在句号/顿号处截断
+      const slice = t.slice(0, len + 4);
+      const pivot = Math.max(slice.lastIndexOf("。"), slice.lastIndexOf("！"), slice.lastIndexOf("；"), slice.lastIndexOf("，"));
+      return (pivot > len - 20 ? slice.slice(0, pivot + 1) : t.slice(0, len)).trim();
+    }
+
+    async function callChatCompletions({ apiBase, apiKey, model, system, user, temperature = 0.7, maxTokens = 300 }) {
+      const url = apiBase.replace(/\/$/, "") + "/chat/completions";
+      const resp = await fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": "Bearer " + apiKey
+        },
+        body: JSON.stringify({
+          model,
+          messages: [
+            { role: "system", content: system },
+            { role: "user", content: user }
+          ],
+          temperature,
+          max_tokens: maxTokens
+        })
+      });
+      if (!resp.ok) {
+        let text = await resp.text().catch(() => "");
+        throw new Error(`HTTP ${resp.status}: ${text}`);
+      }
+      const data = await resp.json();
+      const content = data?.choices?.[0]?.message?.content || "";
+      return content.trim();
+    }
+
+    async function generate() {
+      const prompt = $("prompt").value.trim();
+      
+      // 获取选中的类目
+      const checkedCategories = Array.from(document.querySelectorAll('input[type="checkbox"]:checked'))
+        .map(cb => cb.value);
+      const category = checkedCategories.length > 0 ? checkedCategories.join('、') : "美发服务";
+      
+      // 获取选中的服务人员
+      const checkedStaff = Array.from(document.querySelectorAll('input[type="checkbox"]:checked'))
+        .filter(cb => ['薇薇老师', '赵老师', '李老师', '洋子老师', '小杰'].includes(cb.value))
+        .map(cb => cb.value);
+      const staff = checkedStaff.length > 0 ? checkedStaff.join('、') : "";
+      
+      // 内置100-240字随机
+      const targetLength = Math.floor(Math.random() * 141) + 100; // 100-240随机
+      
+      if (!prompt) {
+        status.textContent = "请先填写提示词";
+        return;
+      }
+      
+      btnGen.disabled = true; btnGen.textContent = "生成中…"; status.textContent = "";
+      try {
+        const system = "你是一个真实的用户，正在给美发店写评价。请用自然、真实的语言，像普通消费者一样表达自己的使用感受。避免官方话术、营销词汇，要像朋友聊天一样自然。可以包含个人体验细节、对比感受、使用场景等真实内容。";
+        let userMsg = `请帮我写一个关于${category}的真实用户评价，大约${targetLength}字左右。`;
+        if (staff) {
+          userMsg += `服务人员是${staff}。`;
+        }
+        userMsg += `基于以下要点：${prompt}\n\n要求：1.语言自然真实，像真人写的 2.避免"非常好"、"强烈推荐"等套话 3.可以包含具体的使用细节和服务人员 4.字数控制在${targetLength}字左右 5.不要加引号或表情符号`;
+        const raw = await callChatCompletions({ 
+          apiBase: DEEPSEEK_CONFIG.apiBase, 
+          apiKey: DEEPSEEK_CONFIG.apiKey, 
+          model: DEEPSEEK_CONFIG.model, 
+          system, 
+          user: userMsg, 
+          temperature: 0.8, 
+          maxTokens: 400 
+        });
+        const text = cutToLength(raw, targetLength);
+        result.style.display = "block";
+        result.textContent = text;
+        btnCopyGo.disabled = !text;
+        const actualLength = text.replace(/\s+/g, "").length;
+        status.textContent = text ? `已生成真实评价，共${actualLength}字` : "生成失败，请重试";
+      } catch (e) {
+        status.textContent = "请求失败：" + (e && e.message ? e.message : e);
+      } finally {
+        btnGen.disabled = false; btnGen.textContent = "生成文案";
+      }
+    }
+
+    async function copyText(text) {
+      try {
+        if (navigator.clipboard?.writeText) {
+          await navigator.clipboard.writeText(text);
+          return true;
+        }
+      } catch (_) {}
+      // 旧方案兜底
+      const ta = document.createElement("textarea");
+      ta.value = text; document.body.appendChild(ta);
+      ta.select(); ta.setSelectionRange(0, 99999);
+      const ok = document.execCommand("copy");
+      document.body.removeChild(ta);
+      return ok;
+    }
+
+    btnGen.addEventListener("click", generate);
+    btnCopyGo.addEventListener("click", async () => {
+      const text = result.textContent.trim();
+      if (!text) return;
+      const ok = await copyText(text);
+      const platform = $("shopPlatform").value;
+      const platformName = platform === "douyin" ? "抖音" : "美团";
+      const url = PLATFORM_URLS[platform];
+      status.textContent = ok ? `文案已复制，正在打开${platformName}店铺…` : "复制失败，请手动复制后再打开";
+      setTimeout(() => { window.location.href = url; }, 300);
+    });
+  </script>
+  
+</body>
+</html>
