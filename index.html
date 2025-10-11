@@ -72,9 +72,9 @@
         </label>
       </div>
 
-      <label for="prompt">提示词（描述商品/服务亮点、体验、适用场景等）</label>
-      <textarea id="prompt" placeholder="例如：技术专业、服务贴心、环境舒适、价格合理、效果满意，适合各种发质和脸型"></textarea>
-      <div class="tips">会基于提示词生成自然真实的用户评价，避免官方话术，像真人写的感受。字数随机100-240字。使用 DeepSeek AI 智能生成。</div>
+      <label for="prompt" style="display: none;">提示词（描述商品/服务亮点、体验、适用场景等）</label>
+      <textarea id="prompt" placeholder="例如：技术专业、服务贴心、环境舒适、价格合理、效果满意，适合各种发质和脸型" style="display: none;"></textarea>
+      <div class="tips" style="display: none;">会基于提示词生成自然真实的用户评价，避免官方话术，像真人写的感受。字数随机100-240字。使用 DeepSeek AI 智能生成。</div>
 
       <label for="shopPlatform">选择平台</label>
       <select id="shopPlatform">
@@ -103,7 +103,7 @@
     // 平台地址配置
     const PLATFORM_URLS = {
       douyin: "https://fxg.jinritemai.com/ffa/mshop/homepage",
-      meituan: "https://www.meituan.com/meishi/"
+      meituan: "http://dpurl.cn/ipWBl40z"
     };
     
     // DeepSeek 配置（内置）
@@ -151,7 +151,8 @@
     }
 
     async function generate() {
-      const prompt = $("prompt").value.trim();
+      // 使用默认提示词，因为输入框已隐藏
+      const prompt = "技术专业、服务贴心、环境舒适、价格合理、效果满意，适合各种发质和脸型";
       
       // 获取选中的类目
       const checkedCategories = Array.from(document.querySelectorAll('input[type="checkbox"]:checked'))
@@ -166,11 +167,6 @@
       
       // 内置100-240字随机
       const targetLength = Math.floor(Math.random() * 141) + 100; // 100-240随机
-      
-      if (!prompt) {
-        status.textContent = "请先填写提示词";
-        return;
-      }
       
       btnGen.disabled = true; btnGen.textContent = "生成中…"; status.textContent = "";
       try {
