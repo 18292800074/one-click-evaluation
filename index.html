@@ -102,8 +102,16 @@
     
     // 平台地址配置
     const PLATFORM_URLS = {
-      douyin: "https://v.douyin.com/J5Qzqzvyb8Y/ 3@4.com :1pm",
+      douyin: "https://v.douyin.com/J5Qzqzvyb8Y/",
       meituan: "http://dpurl.cn/ipWBl40z"
+    };
+    
+    // 美团店铺信息
+    const MEITUAN_SHOP_INFO = {
+      name: "李小寻造型（际华广场店）",
+      address: "雁塔区昆明池路金辉悦府小北门门口",
+      phone: "17602910667",
+      url: "http://dpurl.cn/ipWBl40z"
     };
     
     // 美团APP深度链接配置
@@ -230,20 +238,38 @@
         status.textContent = `文案已复制，正在打开${platformName}店铺…`;
         
         if (platform === "meituan") {
-          // 美团特殊处理：先尝试APP，再尝试网页
+          // 美团特殊处理：显示店铺信息并提供多种跳转方式
+          const shopInfo = MEITUAN_SHOP_INFO;
+          
+          // 显示店铺信息
+          const shopDetails = `
+店铺名称：${shopInfo.name}
+店铺地址：${shopInfo.address}
+联系电话：${shopInfo.phone}
+`;
+          
+          // 尝试多种跳转方式
           try {
-            // 尝试打开美团APP
+            // 方式1：尝试直接打开美团APP
             const appWindow = window.open(MEITUAN_APP_SCHEME, '_self');
             
-            // 如果APP没有打开，则打开网页版
+            // 方式2：如果APP没有打开，则打开网页版
             setTimeout(() => {
               window.open(MEITUAN_FALLBACK_URL, '_blank');
-              status.textContent = `文案已复制，已打开美团店铺页面。如果未自动跳转到APP，请手动打开美团APP`;
+              status.textContent = `文案已复制！店铺信息：${shopDetails}已打开美团页面，请手动搜索"${shopInfo.name}"或拨打${shopInfo.phone}`;
             }, 500);
+            
+            // 方式3：提供备用方案
+            setTimeout(() => {
+              if (confirm(`文案已复制！\n\n店铺信息：\n${shopDetails}\n\n如果美团APP没有自动打开，请：\n1. 手动打开美团APP\n2. 搜索"${shopInfo.name}"\n3. 或拨打${shopInfo.phone}联系店铺\n\n点击确定继续，取消则关闭`)) {
+                window.open(MEITUAN_FALLBACK_URL, '_blank');
+              }
+            }, 2000);
+            
           } catch (e) {
             // 如果APP打开失败，直接打开网页版
             window.open(MEITUAN_FALLBACK_URL, '_blank');
-            status.textContent = `文案已复制，已打开美团店铺页面。请手动打开美团APP查看`;
+            status.textContent = `文案已复制！店铺信息：${shopDetails}已打开美团页面，请手动搜索"${shopInfo.name}"`;
           }
         } else {
           // 抖音处理
