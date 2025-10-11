@@ -102,9 +102,13 @@
     
     // 平台地址配置
     const PLATFORM_URLS = {
-      douyin: "https://fxg.jinritemai.com/ffa/mshop/homepage",
+      douyin: "https://v.douyin.com/J5Qzqzvyb8Y/ 3@4.com :1pm",
       meituan: "http://dpurl.cn/ipWBl40z"
     };
+    
+    // 美团APP深度链接配置
+    const MEITUAN_APP_SCHEME = "imeituan://www.meituan.com/";
+    const MEITUAN_FALLBACK_URL = "http://dpurl.cn/ipWBl40z";
     
     // DeepSeek 配置（内置）
     const DEEPSEEK_CONFIG = {
@@ -221,9 +225,42 @@
       const ok = await copyText(text);
       const platform = $("shopPlatform").value;
       const platformName = platform === "douyin" ? "抖音" : "美团";
-      const url = PLATFORM_URLS[platform];
-      status.textContent = ok ? `文案已复制，正在打开${platformName}店铺…` : "复制失败，请手动复制后再打开";
-      setTimeout(() => { window.location.href = url; }, 300);
+      
+      if (ok) {
+        status.textContent = `文案已复制，正在打开${platformName}店铺…`;
+        
+        if (platform === "meituan") {
+          // 美团特殊处理：先尝试APP，再尝试网页
+          try {
+            // 尝试打开美团APP
+            const appWindow = window.open(MEITUAN_APP_SCHEME, '_self');
+            
+            // 如果APP没有打开，则打开网页版
+            setTimeout(() => {
+              window.open(MEITUAN_FALLBACK_URL, '_blank');
+              status.textContent = `文案已复制，已打开美团店铺页面。如果未自动跳转到APP，请手动打开美团APP`;
+            }, 500);
+          } catch (e) {
+            // 如果APP打开失败，直接打开网页版
+            window.open(MEITUAN_FALLBACK_URL, '_blank');
+            status.textContent = `文案已复制，已打开美团店铺页面。请手动打开美团APP查看`;
+          }
+        } else {
+          // 抖音处理
+          const url = PLATFORM_URLS[platform];
+          const newWindow = window.open(url, '_blank');
+          
+          setTimeout(() => {
+            if (newWindow && !newWindow.closed) {
+              status.textContent = `文案已复制，${platformName}店铺已在新窗口打开`;
+            } else {
+              status.textContent = `文案已复制，请手动打开${platformName}APP`;
+            }
+          }, 1000);
+        }
+      } else {
+        status.textContent = "复制失败，请手动复制文案";
+      }
     });
   </script>
   
