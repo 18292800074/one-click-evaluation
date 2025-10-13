@@ -41,7 +41,12 @@
       </select>
 
       <div class="actions">
-        <button id="btnTest" class="btn-primary">智能跳转测试</button>
+        <button id="btnTest" class="btn-primary">深度链接测试</button>
+        <button id="btnImeituan" class="btn-primary">imeituan:// 测试</button>
+        <button id="btnReal" class="btn-primary">真实格式测试</button>
+        <button id="btnCopy" class="btn-primary">复制店铺信息</button>
+        <button id="btnWeb" class="btn-primary">打开网页版</button>
+        <button id="btnMini" class="btn-primary">美团小程序</button>
       </div>
 
       <div id="status" class="muted" style="margin-top:8px;"></div>
@@ -52,6 +57,11 @@
   <script>
     const $ = (id) => document.getElementById(id);
     const btnTest = $("btnTest");
+    const btnImeituan = $("btnImeituan");
+    const btnReal = $("btnReal");
+    const btnCopy = $("btnCopy");
+    const btnWeb = $("btnWeb");
+    const btnMini = $("btnMini");
     const status = $("status");
     
     // 平台地址配置
@@ -212,6 +222,16 @@
           description: "使用店铺ID的shop链接"
         },
         {
+          name: "店铺详情页",
+          url: `imeituan://www.meituan.com/meishi/detail/${shopId}/`,
+          description: "店铺详情页链接"
+        },
+        {
+          name: "店铺POI链接",
+          url: `imeituan://www.meituan.com/poi/${shopId}/`,
+          description: "使用POI ID的链接"
+        },
+        {
           name: "店铺名称链接",
           url: `imeituan://www.meituan.com/meishi/?shopname=${shopName}`,
           description: "使用店铺名称的链接"
@@ -225,6 +245,11 @@
           name: "基础链接",
           url: "imeituan://www.meituan.com/",
           description: "美团APP主页"
+        },
+        {
+          name: "美食分类",
+          url: "imeituan://www.meituan.com/meishi/",
+          description: "美团美食分类页"
         }
       ];
       
@@ -279,8 +304,294 @@
       testNextLink();
     }
     
+    // 复制店铺信息
+    function copyShopInfo() {
+      const shopInfo = MEITUAN_SHOP_INFO;
+      const shopDetails = `店铺名称：${shopInfo.name}\n店铺地址：${shopInfo.address}\n联系电话：${shopInfo.phone}\n\n请在美团APP中搜索店铺名称或拨打联系电话`;
+      
+      console.log('复制店铺信息');
+      status.textContent = `正在复制店铺信息...\n\n${shopDetails}`;
+      
+      try {
+        navigator.clipboard.writeText(shopDetails).then(() => {
+          status.textContent = `店铺信息已复制到剪贴板！\n\n${shopDetails}\n\n请打开美团APP，粘贴信息或手动搜索店铺`;
+        }).catch(() => {
+          // 备用方案：创建临时输入框
+          const textArea = document.createElement('textarea');
+          textArea.value = shopDetails;
+          document.body.appendChild(textArea);
+          textArea.select();
+          document.execCommand('copy');
+          document.body.removeChild(textArea);
+          status.textContent = `店铺信息已复制到剪贴板！\n\n${shopDetails}\n\n请打开美团APP，粘贴信息或手动搜索店铺`;
+        });
+      } catch (e) {
+        console.log('复制失败:', e);
+        status.textContent = `复制失败：${e.message}`;
+      }
+    }
+    
+    // 打开网页版
+    function openWebVersion() {
+      const shopInfo = MEITUAN_SHOP_INFO;
+      const shopDetails = `店铺名称：${shopInfo.name}\n店铺地址：${shopInfo.address}\n联系电话：${shopInfo.phone}`;
+      const webUrl = PLATFORM_URLS.meituan;
+      
+      console.log('打开网页版');
+      status.textContent = `正在打开网页版店铺页面...\n\n${shopDetails}\n\n链接: ${webUrl}`;
+      
+      try {
+        window.open(webUrl, '_blank');
+        status.textContent = `网页版店铺页面已打开！\n\n${shopDetails}\n\n网页版链接: ${webUrl}`;
+      } catch (e) {
+        console.log('打开网页版失败:', e);
+        status.textContent = `打开网页版失败：${e.message}`;
+      }
+    }
+    
+    // 美团小程序跳转
+    function openMeituanMiniProgram() {
+      const shopInfo = MEITUAN_SHOP_INFO;
+      const shopDetails = `店铺名称：${shopInfo.name}\n店铺地址：${shopInfo.address}\n联系电话：${shopInfo.phone}`;
+      
+      console.log('美团小程序跳转');
+      status.textContent = `美团小程序跳转\n\n${shopDetails}\n\n尝试多种小程序跳转方式...`;
+      
+      try {
+        // 方法1: 尝试微信小程序跳转
+        const miniProgramUrl = `weixin://dl/business/?t=*&appid=wx2c348cf579062e56&path=pages%2Findex%2Findex%3FshopId%3D1033453100`;
+        
+        // 方法2: 尝试美团小程序链接
+        const meituanMiniUrl = `https://mp.meituan.com/meishi/1033453100/`;
+        
+        // 方法3: 尝试美团APP内嵌H5链接
+        const meituanH5Url = `https://h5.meituan.com/meishi/1033453100/`;
+        
+        // 先尝试微信小程序
+        const linkElement = document.createElement('a');
+        linkElement.href = miniProgramUrl;
+        linkElement.style.display = 'none';
+        document.body.appendChild(linkElement);
+        linkElement.click();
+        document.body.removeChild(linkElement);
+        
+        status.textContent = `美团小程序跳转尝试中...\n\n${shopDetails}\n\n尝试链接: ${miniProgramUrl}\n\n如果小程序未打开，将尝试其他方式`;
+        
+        // 备用方案：打开美团H5页面
+        setTimeout(() => {
+          window.open(meituanH5Url, '_blank');
+          status.textContent = `美团小程序跳转完成！\n\n${shopDetails}\n\n已尝试小程序跳转，并打开H5页面作为备用\n\nH5链接: ${meituanH5Url}`;
+        }, 3000);
+        
+      } catch (e) {
+        console.log('美团小程序跳转失败:', e);
+        status.textContent = `美团小程序跳转失败：${e.message}`;
+      }
+    }
+    
+    // imeituan:// 深度链接测试
+    function testImeituanLinks() {
+      const shopInfo = MEITUAN_SHOP_INFO;
+      const shopDetails = `店铺名称：${shopInfo.name}\n店铺地址：${shopInfo.address}\n联系电话：${shopInfo.phone}`;
+      
+      console.log('imeituan:// 深度链接测试');
+      status.textContent = `imeituan:// 深度链接测试\n\n${shopDetails}\n\n测试美团APP深度链接格式...`;
+      
+      const shopId = "1033453100";
+      const shopName = encodeURIComponent(shopInfo.name);
+      
+      // 专门测试 imeituan:// 格式的深度链接（基于真实格式）
+      const imeituanLinks = [
+        {
+          name: "基础链接",
+          url: "imeituan://www.meituan.com/",
+          description: "美团APP主页"
+        },
+        {
+          name: "全局搜索店铺",
+          url: `imeituan://www.meituan.com/search?q=${shopName}`,
+          description: "使用全局搜索功能搜索店铺"
+        },
+        {
+          name: "美食搜索店铺",
+          url: `imeituan://www.meituan.com/search?q=${shopName}`,
+          description: "搜索店铺名称（美食相关）"
+        },
+        {
+          name: "店铺ID链接1",
+          url: `imeituan://www.meituan.com/meishi/${shopId}/`,
+          description: "使用店铺ID的meishi链接"
+        },
+        {
+          name: "店铺ID链接2", 
+          url: `imeituan://www.meituan.com/shop/${shopId}/`,
+          description: "使用店铺ID的shop链接"
+        },
+        {
+          name: "店铺详情页",
+          url: `imeituan://www.meituan.com/meishi/detail/${shopId}/`,
+          description: "店铺详情页链接"
+        },
+        {
+          name: "店铺POI链接",
+          url: `imeituan://www.meituan.com/poi/${shopId}/`,
+          description: "使用POI ID的链接"
+        },
+        {
+          name: "美食分类",
+          url: "imeituan://www.meituan.com/meishi/",
+          description: "美团美食分类页"
+        }
+      ];
+      
+      let currentTest = 0;
+      
+      function testNextImeituanLink() {
+        if (currentTest < imeituanLinks.length) {
+          const link = imeituanLinks[currentTest];
+          
+          status.textContent = `imeituan:// 测试: ${link.name}\n\n${shopDetails}\n\n${link.description}\n\n链接: ${link.url}\n\n请检查美团APP是否打开并跳转到店铺页面...`;
+          
+          try {
+            const linkElement = document.createElement('a');
+            linkElement.href = link.url;
+            linkElement.style.display = 'none';
+            document.body.appendChild(linkElement);
+            linkElement.click();
+            document.body.removeChild(linkElement);
+            
+            // 等待用户反馈
+            setTimeout(() => {
+              const success = confirm(`imeituan:// 深度链接测试 ${currentTest + 1}/${imeituanLinks.length}\n\n${link.name}\n链接: ${link.url}\n\n请检查美团APP：\n1. 是否打开了？\n2. 是否跳转到了"${shopInfo.name}"店铺页面？\n\n点击"确定"表示成功跳转到店铺页面\n点击"取消"表示没有跳转到店铺页面`);
+              
+              if (success) {
+                alert(`🎉 成功！找到可用的 imeituan:// 深度链接！\n\n成功链接: ${link.url}\n\n${shopDetails}`);
+                status.textContent = `✅ 找到可用链接！\n\n成功链接: ${link.url}\n\n${shopDetails}`;
+                return; // 停止测试
+              }
+              
+              currentTest++;
+              testNextImeituanLink();
+            }, 3000); // 3秒后询问结果
+            
+          } catch (e) {
+            console.log(`imeituan:// 链接 ${currentTest + 1} 测试失败:`, e);
+            currentTest++;
+            setTimeout(testNextImeituanLink, 1000);
+          }
+        } else {
+          // 所有链接测试完成
+          status.textContent = `所有 imeituan:// 深度链接测试完成！\n\n${shopDetails}\n\n如果美团APP没有跳转到店铺页面，将使用网页版链接`;
+          
+          // 备用方案：打开网页版
+          setTimeout(() => {
+            const webUrl = PLATFORM_URLS.meituan;
+            window.open(webUrl, '_blank');
+            status.textContent = `imeituan:// 深度链接测试完成！\n\n${shopDetails}\n\n测试了 ${imeituanLinks.length} 个 imeituan:// 深度链接\n\n已打开网页版作为备用方案\n\n网页版链接: ${webUrl}`;
+          }, 1000);
+        }
+      }
+      
+      testNextImeituanLink();
+    }
+    
+    // 真实格式测试（基于你提供的真实 imeituan:// 格式）
+    function testRealImeituanFormats() {
+      const shopInfo = MEITUAN_SHOP_INFO;
+      const shopDetails = `店铺名称：${shopInfo.name}\n店铺地址：${shopInfo.address}\n联系电话：${shopInfo.phone}`;
+      
+      console.log('真实格式测试');
+      status.textContent = `真实格式测试\n\n${shopDetails}\n\n测试基于真实 imeituan:// 格式的深度链接...`;
+      
+      const shopName = encodeURIComponent(shopInfo.name);
+      
+      // 基于你提供的真实 imeituan:// 格式
+      const realFormats = [
+        {
+          name: "基础链接",
+          url: "imeituan://www.meituan.com/",
+          description: "美团APP主页"
+        },
+        {
+          name: "全局搜索店铺",
+          url: `imeituan://www.meituan.com/search?q=${shopName}`,
+          description: "使用全局搜索功能搜索店铺（基于真实格式）"
+        },
+        {
+          name: "美食分类",
+          url: "imeituan://www.meituan.com/meishi/",
+          description: "美团美食分类页"
+        },
+        {
+          name: "扫码页面",
+          url: "imeituan://www.meituan.com/scanQRCode",
+          description: "美团扫码页面"
+        },
+        {
+          name: "美团打车",
+          url: "imeituan://www.meituan.com/cab/home",
+          description: "美团打车页面"
+        }
+      ];
+      
+      let currentTest = 0;
+      
+      function testNextRealFormat() {
+        if (currentTest < realFormats.length) {
+          const link = realFormats[currentTest];
+          
+          status.textContent = `真实格式测试: ${link.name}\n\n${shopDetails}\n\n${link.description}\n\n链接: ${link.url}\n\n请检查美团APP是否打开并跳转到相应页面...`;
+          
+          try {
+            const linkElement = document.createElement('a');
+            linkElement.href = link.url;
+            linkElement.style.display = 'none';
+            document.body.appendChild(linkElement);
+            linkElement.click();
+            document.body.removeChild(linkElement);
+            
+            // 等待用户反馈
+            setTimeout(() => {
+              const success = confirm(`真实格式测试 ${currentTest + 1}/${realFormats.length}\n\n${link.name}\n链接: ${link.url}\n\n请检查美团APP：\n1. 是否打开了？\n2. 是否跳转到了相应页面？\n\n点击"确定"表示成功跳转\n点击"取消"表示没有跳转`);
+              
+              if (success) {
+                alert(`🎉 成功！找到可用的真实格式链接！\n\n成功链接: ${link.url}\n\n${shopDetails}`);
+                status.textContent = `✅ 找到可用链接！\n\n成功链接: ${link.url}\n\n${shopDetails}`;
+                return; // 停止测试
+              }
+              
+              currentTest++;
+              testNextRealFormat();
+            }, 3000); // 3秒后询问结果
+            
+          } catch (e) {
+            console.log(`真实格式链接 ${currentTest + 1} 测试失败:`, e);
+            currentTest++;
+            setTimeout(testNextRealFormat, 1000);
+          }
+        } else {
+          // 所有链接测试完成
+          status.textContent = `所有真实格式测试完成！\n\n${shopDetails}\n\n如果美团APP没有跳转到相应页面，将使用网页版链接`;
+          
+          // 备用方案：打开网页版
+          setTimeout(() => {
+            const webUrl = PLATFORM_URLS.meituan;
+            window.open(webUrl, '_blank');
+            status.textContent = `真实格式测试完成！\n\n${shopDetails}\n\n测试了 ${realFormats.length} 个真实格式链接\n\n已打开网页版作为备用方案\n\n网页版链接: ${webUrl}`;
+          }, 1000);
+        }
+      }
+      
+      testNextRealFormat();
+    }
+    
     // 绑定按钮事件
     btnTest.addEventListener("click", testSmartJump);
+    btnImeituan.addEventListener("click", testImeituanLinks);
+    btnReal.addEventListener("click", testRealImeituanFormats);
+    btnCopy.addEventListener("click", copyShopInfo);
+    btnWeb.addEventListener("click", openWebVersion);
+    btnMini.addEventListener("click", openMeituanMiniProgram);
   </script>
   
 </body>
