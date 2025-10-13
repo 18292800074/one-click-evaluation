@@ -29,52 +29,10 @@
 <body>
   <div class="container">
     <div class="card">
-      <h1>优质评价文案生成器</h1>
+      <h1>店铺跳转测试工具</h1>
       <div class="tips" style="margin-bottom: 16px; padding: 8px; background: #f0f9ff; border: 1px solid #bae6fd; border-radius: 6px;">
-        🔥 已内置 DeepSeek AI，无需配置，直接使用！
+        📱 测试美团/抖音店铺跳转功能，直接在手机上实时测试！
       </div>
-
-      <label>类目（可多选）</label>
-      <div style="display: flex; flex-wrap: wrap; gap: 8px; margin: 8px 0;">
-        <label style="display: flex; align-items: center; gap: 4px; font-size: 14px; color: #555; cursor: pointer;">
-          <input type="checkbox" value="剪发" style="margin: 0;"> 剪发
-        </label>
-        <label style="display: flex; align-items: center; gap: 4px; font-size: 14px; color: #555; cursor: pointer;">
-          <input type="checkbox" value="烫发" style="margin: 0;"> 烫发
-        </label>
-        <label style="display: flex; align-items: center; gap: 4px; font-size: 14px; color: #555; cursor: pointer;">
-          <input type="checkbox" value="染发" style="margin: 0;"> 染发
-        </label>
-        <label style="display: flex; align-items: center; gap: 4px; font-size: 14px; color: #555; cursor: pointer;">
-          <input type="checkbox" value="护理" style="margin: 0;"> 护理
-        </label>
-        <label style="display: flex; align-items: center; gap: 4px; font-size: 14px; color: #555; cursor: pointer;">
-          <input type="checkbox" value="造型" style="margin: 0;"> 造型
-        </label>
-      </div>
-
-      <label>服务人员（可多选）</label>
-      <div style="display: flex; flex-wrap: wrap; gap: 8px; margin: 8px 0;">
-        <label style="display: flex; align-items: center; gap: 4px; font-size: 14px; color: #555; cursor: pointer;">
-          <input type="checkbox" value="薇薇老师" style="margin: 0;"> 薇薇老师
-        </label>
-        <label style="display: flex; align-items: center; gap: 4px; font-size: 14px; color: #555; cursor: pointer;">
-          <input type="checkbox" value="赵老师" style="margin: 0;"> 赵老师
-        </label>
-        <label style="display: flex; align-items: center; gap: 4px; font-size: 14px; color: #555; cursor: pointer;">
-          <input type="checkbox" value="李老师" style="margin: 0;"> 李老师
-        </label>
-        <label style="display: flex; align-items: center; gap: 4px; font-size: 14px; color: #555; cursor: pointer;">
-          <input type="checkbox" value="洋子老师" style="margin: 0;"> 洋子老师
-        </label>
-        <label style="display: flex; align-items: center; gap: 4px; font-size: 14px; color: #555; cursor: pointer;">
-          <input type="checkbox" value="小杰" style="margin: 0;"> 小杰
-        </label>
-      </div>
-
-      <label for="prompt" style="display: none;">提示词（描述商品/服务亮点、体验、适用场景等）</label>
-      <textarea id="prompt" placeholder="例如：技术专业、服务贴心、环境舒适、价格合理、效果满意，适合各种发质和脸型" style="display: none;"></textarea>
-      <div class="tips" style="display: none;">会基于提示词生成自然真实的用户评价，避免官方话术，像真人写的感受。字数随机100-240字。使用 DeepSeek AI 智能生成。</div>
 
       <label for="shopPlatform">选择平台</label>
       <select id="shopPlatform">
@@ -83,27 +41,23 @@
       </select>
 
       <div class="actions">
-        <button id="btnGen" class="btn-primary">生成文案</button>
-        <button id="btnCopyGo" class="btn-secondary" disabled>复制并跳转</button>
+        <button id="btnGen" class="btn-primary">测试跳转</button>
       </div>
 
-      <div id="result" class="result" style="display:none;"></div>
       <div id="status" class="muted" style="margin-top:8px;"></div>
     </div>
-    <div class="footer">使用 DeepSeek AI 智能生成，无需配置直接使用</div>
+    <div class="footer">店铺跳转测试工具 - 支持美团/抖音店铺跳转</div>
   </div>
 
   <script>
     const $ = (id) => document.getElementById(id);
     const btnGen = $("btnGen");
-    const btnCopyGo = $("btnCopyGo");
-    const result = $("result");
     const status = $("status");
     
     // 平台地址配置
     const PLATFORM_URLS = {
       douyin: "https://v.douyin.com/J5Qzqzvyb8Y/",
-      meituan: "http://dpurl.cn/ipWBl40z"
+      meituan: "https://g.meituan.com/gfe/mmp-gc-poidetail/detail-page/detail?shopid=1033453100&utm_term=AandroidBgroupC12.44.203DweiboEpoiG2025101117141800000000000009052C1B83FF245D38601621B9373465CA165714723951899722153&lch=appshare_4a810e513fbc3171A5&utm_fromapp=copy&utm_medium=androidweb&userId=265394714&ticket_exchange_for_token=at%3AC5148CBE67C8533F2B1B2E5279AC1753%3AAQD6G1LqAAAAADAAAAC84csgc2EWnVZvtuvzAlnMnJ3PFsfx1OLg3uXREc-CX_AneucCWvzR5MYIgdHPSAe8Zdj0oWpqtUqwkxGcYWsg1S_rZw&utm_source=appshare&poiIdEncrypt=qB4r17787ba40abd9fe260a337935d72610ee8e63d7690a06106e1ce2a76ee7e798f8d2f49edd8a2b8b73625236509e42666b45860vxu5"
     };
     
     // 美团店铺信息
@@ -119,13 +73,17 @@
     const MEITUAN_SHOP_DEEP_LINK = "imeituan://www.meituan.com/shop/";
     const MEITUAN_FALLBACK_URL = "http://dpurl.cn/ipWBl40z";
     
-    // DeepSeek 配置（内置）
+    // DeepSeek 配置（已注释掉，不再使用生成文案功能）
+    /*
     const DEEPSEEK_CONFIG = {
       apiBase: "https://api.deepseek.com/v1",
       apiKey: "sk-33d4ff5bcb004f26a62cd6f17df25a78",
       model: "deepseek-chat"
     };
+    */
 
+    // 生成文案相关函数已注释掉
+    /*
     function cutToLength(text, len) {
       if (!text) return "";
       const t = text.replace(/\s+/g, "");
@@ -226,82 +184,80 @@
       document.body.removeChild(ta);
       return ok;
     }
+    */
 
-    btnGen.addEventListener("click", generate);
-    btnCopyGo.addEventListener("click", async () => {
-      const text = result.textContent.trim();
-      if (!text) return;
-      const ok = await copyText(text);
-      const platform = $("shopPlatform").value;
-      const platformName = platform === "douyin" ? "抖音" : "美团";
-      
-      if (ok) {
-        status.textContent = `文案已复制，正在打开${platformName}店铺…`;
-        
-        if (platform === "meituan") {
-          // 美团特殊处理：提供多种跳转方式
-          const shopInfo = MEITUAN_SHOP_INFO;
-          
-          // 显示店铺信息
-          const shopDetails = `
+    // btnGen.addEventListener("click", generate); // 暂时注释掉生成文案功能
+    
+    // 美团跳转功能
+    function jumpToMeituan() {
+      const shopInfo = MEITUAN_SHOP_INFO;
+      const shopDetails = `
 店铺名称：${shopInfo.name}
 店铺地址：${shopInfo.address}
 联系电话：${shopInfo.phone}`;
-          
-          status.textContent = `文案已复制！正在尝试跳转美团店铺...\n\n${shopDetails}`;
-          
-          // 尝试多种跳转方式
-          let jumpSuccess = false;
-          
-          // 方式1：尝试美团APP深度链接
-          try {
-            const meituanAppLink = "imeituan://www.meituan.com/";
-            const linkElement = document.createElement('a');
-            linkElement.href = meituanAppLink;
-            linkElement.style.display = 'none';
-            document.body.appendChild(linkElement);
-            linkElement.click();
-            document.body.removeChild(linkElement);
-            
-            setTimeout(() => {
-              if (!jumpSuccess) {
-                // 方式2：尝试网页版美团
-                window.open("https://www.meituan.com/", '_blank');
-                status.textContent = `文案已复制！已打开美团网页版\n\n${shopDetails}\n\n请手动搜索"${shopInfo.name}"或拨打${shopInfo.phone}`;
-              }
-            }, 2000);
-            
-          } catch (e) {
-            console.log('APP跳转失败:', e);
-          }
-          
-          // 方式3：显示详细指导
-          setTimeout(() => {
-            const userChoice = confirm(`文案已复制！\n\n${shopDetails}\n\n由于浏览器限制，无法直接跳转到美团店铺主页\n\n请按以下步骤操作：\n1. 打开美团APP\n2. 搜索"${shopInfo.name}"\n3. 找到"李小寻造型（际华广场店）"\n4. 或直接拨打${shopInfo.phone}联系店铺\n\n点击确定查看店铺详情`);
-            
-            if (userChoice) {
-              // 打开美团网页版作为备用
-              window.open("https://www.meituan.com/search/?keyword=李小寻造型", '_blank');
-              status.textContent = `文案已复制！已打开美团搜索页面\n\n${shopDetails}\n\n请搜索"${shopInfo.name}"找到店铺`;
-            } else {
-              status.textContent = `文案已复制！\n\n${shopDetails}\n\n请手动打开美团APP搜索"${shopInfo.name}"`;
-            }
-          }, 3000);
-        } else {
-          // 抖音处理
-          const url = PLATFORM_URLS[platform];
-          const newWindow = window.open(url, '_blank');
-          
-          setTimeout(() => {
-            if (newWindow && !newWindow.closed) {
-              status.textContent = `文案已复制，${platformName}店铺已在新窗口打开`;
-            } else {
-              status.textContent = `文案已复制，请手动打开${platformName}APP`;
-            }
-          }, 1000);
-        }
+      
+      console.log('跳转到美团店铺...');
+      status.textContent = `正在跳转美团店铺...\n\n${shopDetails}`;
+      
+      try {
+        // 方式1：尝试美团APP深度链接（使用店铺ID）
+        const shopId = "1033453100";
+        const meituanAppLinks = [
+          `imeituan://www.meituan.com/meishi/${shopId}/`,
+          `imeituan://www.meituan.com/shop/${shopId}/`,
+          `imeituan://www.meituan.com/meishi/?shopid=${shopId}`,
+          "imeituan://www.meituan.com/"
+        ];
+        
+        // 尝试第一个深度链接
+        const linkElement = document.createElement('a');
+        linkElement.href = meituanAppLinks[0];
+        linkElement.style.display = 'none';
+        document.body.appendChild(linkElement);
+        linkElement.click();
+        document.body.removeChild(linkElement);
+        
+        status.textContent = `美团APP跳转尝试中...\n\n${shopDetails}\n\n如果美团APP没有自动打开，将使用网页版`;
+        
+        // 备用方案：打开网页版店铺链接
+        setTimeout(() => {
+          const webUrl = PLATFORM_URLS.meituan;
+          window.open(webUrl, '_blank');
+          status.textContent = `美团跳转完成！\n\n已打开网页版店铺页面\n\n${shopDetails}\n\n如果美团APP已安装，请手动打开APP查看`;
+        }, 2000);
+        
+      } catch (e) {
+        console.log('美团跳转失败:', e);
+        // 直接打开网页版
+        const webUrl = PLATFORM_URLS.meituan;
+        window.open(webUrl, '_blank');
+        status.textContent = `美团跳转完成！\n\n已打开网页版店铺页面\n\n${shopDetails}`;
+      }
+    }
+    
+    // 抖音跳转功能
+    function jumpToDouyin() {
+      const url = PLATFORM_URLS.douyin;
+      console.log('跳转到抖音...');
+      status.textContent = `正在跳转抖音...\n\n链接：${url}`;
+      
+      try {
+        window.open(url, '_blank');
+        status.textContent = `抖音跳转完成！\n\n链接：${url}`;
+      } catch (e) {
+        console.log('抖音跳转失败:', e);
+        status.textContent = `抖音跳转失败：${e.message}`;
+      }
+    }
+    
+    // 跳转功能
+    btnGen.addEventListener("click", () => {
+      const platform = $("shopPlatform").value;
+      
+      if (platform === "meituan") {
+        jumpToMeituan();
       } else {
-        status.textContent = "复制失败，请手动复制文案";
+        jumpToDouyin();
       }
     });
   </script>
