@@ -41,7 +41,10 @@
       </select>
 
       <div class="actions">
-        <button id="btnTest" class="btn-primary">打开店铺页面</button>
+        <button id="btnPoi" class="btn-primary">测试1: POI链接</button>
+        <button id="btnLife" class="btn-primary">测试2: 生活服务</button>
+        <button id="btnBeauty" class="btn-primary">测试3: 美发美容</button>
+        <button id="btnMain" class="btn-primary">测试4: 美团主页</button>
         <button id="btnCopy" class="btn-secondary">复制店铺信息</button>
       </div>
 
@@ -52,7 +55,10 @@
 
   <script>
     const $ = (id) => document.getElementById(id);
-    const btnTest = $("btnTest");
+    const btnPoi = $("btnPoi");
+    const btnLife = $("btnLife");
+    const btnBeauty = $("btnBeauty");
+    const btnMain = $("btnMain");
     const btnCopy = $("btnCopy");
     const status = $("status");
     
@@ -190,37 +196,28 @@
 
     // btnGen.addEventListener("click", generate); // 暂时注释掉生成文案功能
     
-    // 测试跳转（只调起APP，不打开网页版）
-    function testJump() {
+    // 通用测试函数
+    function testDeepLink(linkUrl, linkName) {
       const shopInfo = MEITUAN_SHOP_INFO;
       const shopDetails = `店铺名称：${shopInfo.name}\n店铺地址：${shopInfo.address}\n联系电话：${shopInfo.phone}`;
-      const shopId = "1033453100";
       
-      console.log('调起美团APP');
-      status.textContent = `正在调起美团APP...\n\n${shopDetails}\n\n尝试跳转到店铺主页...`;
+      console.log(`测试 ${linkName}`);
+      status.textContent = `正在测试 ${linkName}...\n\n${shopDetails}\n\n深度链接: ${linkUrl}\n\n尝试调起美团APP...`;
       
       try {
-        // 尝试多种深度链接格式（美发店铺）
-        const deepLinks = [
-          `imeituan://www.meituan.com/poi/${shopId}`,  // POI通用链接
-          `imeituan://www.meituan.com/life/${shopId}`,  // 生活服务链接
-          `imeituan://www.meituan.com/beauty/${shopId}`,  // 美发美容链接
-          `imeituan://www.meituan.com/`  // 美团主页
-        ];
-        
         let appOpened = false;
         
-        // 尝试第一个深度链接
+        // 使用iframe尝试调起APP
         const linkElement = document.createElement('iframe');
         linkElement.style.display = 'none';
-        linkElement.src = deepLinks[0];
+        linkElement.src = linkUrl;
         document.body.appendChild(linkElement);
         
         // 监听页面可见性变化（APP打开时页面会失去焦点）
         const handleVisibilityChange = () => {
           if (document.hidden) {
             appOpened = true;
-            status.textContent = `美团APP已调起！\n\n${shopDetails}\n\n深度链接: ${deepLinks[0]}`;
+            status.textContent = `✅ 成功！美团APP已调起！\n\n${linkName}\n深度链接: ${linkUrl}\n\n${shopDetails}\n\n请检查是否跳转到店铺主页`;
             document.removeEventListener('visibilitychange', handleVisibilityChange);
           }
         };
@@ -233,14 +230,41 @@
           document.removeEventListener('visibilitychange', handleVisibilityChange);
           
           if (!appOpened) {
-            status.textContent = `调起APP失败\n\n${shopDetails}\n\n请确保已安装美团APP\n\n或手动在美团APP中搜索店铺名称`;
+            status.textContent = `❌ ${linkName} 调起失败\n\n深度链接: ${linkUrl}\n\n${shopDetails}\n\n请尝试其他测试按钮`;
           }
         }, 3000);
         
       } catch (e) {
-        console.log('调起APP失败:', e);
-        status.textContent = `调起APP失败：${e.message}\n\n${shopDetails}\n\n请手动打开美团APP搜索店铺`;
+        console.log(`${linkName} 测试失败:`, e);
+        status.textContent = `❌ ${linkName} 测试失败：${e.message}\n\n${shopDetails}`;
       }
+    }
+    
+    // 测试1: POI链接
+    function testPoiLink() {
+      const shopId = "1033453100";
+      const linkUrl = `imeituan://www.meituan.com/poi/${shopId}`;
+      testDeepLink(linkUrl, "POI链接");
+    }
+    
+    // 测试2: 生活服务链接
+    function testLifeLink() {
+      const shopId = "1033453100";
+      const linkUrl = `imeituan://www.meituan.com/life/${shopId}`;
+      testDeepLink(linkUrl, "生活服务链接");
+    }
+    
+    // 测试3: 美发美容链接
+    function testBeautyLink() {
+      const shopId = "1033453100";
+      const linkUrl = `imeituan://www.meituan.com/beauty/${shopId}`;
+      testDeepLink(linkUrl, "美发美容链接");
+    }
+    
+    // 测试4: 美团主页
+    function testMainLink() {
+      const linkUrl = `imeituan://www.meituan.com/`;
+      testDeepLink(linkUrl, "美团主页");
     }
     
     // 复制店铺信息
@@ -271,7 +295,10 @@
     }
     
     // 绑定按钮事件
-    btnTest.addEventListener("click", testJump);
+    btnPoi.addEventListener("click", testPoiLink);
+    btnLife.addEventListener("click", testLifeLink);
+    btnBeauty.addEventListener("click", testBeautyLink);
+    btnMain.addEventListener("click", testMainLink);
     btnCopy.addEventListener("click", copyShopInfo);
   </script>
   
