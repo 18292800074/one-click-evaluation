@@ -41,6 +41,7 @@
       </select>
 
       <div class="actions">
+        <button id="btnTemp" class="btn-primary" style="background: #ff6b6b;">临时测试: 新格式</button>
         <button id="btnPoi" class="btn-primary">测试1: POI链接</button>
         <button id="btnLife" class="btn-primary">测试2: 生活服务</button>
         <button id="btnBeauty" class="btn-primary">测试3: 美发美容</button>
@@ -55,6 +56,7 @@
 
   <script>
     const $ = (id) => document.getElementById(id);
+    const btnTemp = $("btnTemp");
     const btnPoi = $("btnPoi");
     const btnLife = $("btnLife");
     const btnBeauty = $("btnBeauty");
@@ -240,6 +242,13 @@
       }
     }
     
+    // 临时测试: 新格式链接
+    function testTempLink() {
+      const shopId = "1033453100";
+      const linkUrl = `imeituan://www.meituan.com/takeout/foods?poi_id=${shopId}&spu_id=0`;
+      testDeepLink(linkUrl, "临时测试新格式");
+    }
+    
     // 测试1: POI链接
     function testPoiLink() {
       const shopId = "1033453100";
@@ -295,6 +304,7 @@
     }
     
     // 绑定按钮事件
+    btnTemp.addEventListener("click", testTempLink);
     btnPoi.addEventListener("click", testPoiLink);
     btnLife.addEventListener("click", testLifeLink);
     btnBeauty.addEventListener("click", testBeautyLink);
