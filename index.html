@@ -41,10 +41,10 @@
       </select>
 
       <div class="actions">
-        <button id="btnTest1" class="btn-primary">测试1: APP深度链接</button>
-        <button id="btnTest2" class="btn-primary">测试2: 店铺ID链接</button>
-        <button id="btnTest3" class="btn-primary">测试3: 搜索链接</button>
-        <button id="btnTest4" class="btn-primary">测试4: 网页版链接</button>
+        <button id="btnTest1" class="btn-primary">测试1: 智能跳转</button>
+        <button id="btnTest2" class="btn-primary">测试2: APP检测跳转</button>
+        <button id="btnTest3" class="btn-primary">测试3: 网页版链接</button>
+        <button id="btnTest4" class="btn-primary">测试4: 复制链接</button>
         <button id="btnTest5" class="btn-primary">测试5: 抖音链接</button>
       </div>
 
@@ -196,89 +196,138 @@
 
     // btnGen.addEventListener("click", generate); // 暂时注释掉生成文案功能
     
-    // 测试1: APP深度链接
-    function testAppDeepLink() {
+    // 测试1: 智能跳转
+    function testSmartJump() {
       const shopInfo = MEITUAN_SHOP_INFO;
       const shopDetails = `店铺名称：${shopInfo.name}\n店铺地址：${shopInfo.address}\n联系电话：${shopInfo.phone}`;
       
-      console.log('测试1: APP深度链接');
-      status.textContent = `测试1: 美团APP深度链接\n\n${shopDetails}\n\n尝试链接: imeituan://www.meituan.com/`;
+      console.log('测试1: 智能跳转');
+      status.textContent = `测试1: 智能跳转\n\n${shopDetails}\n\n尝试多种跳转方式...`;
       
       try {
+        // 策略1: 尝试美团APP深度链接
+        const shopId = "1033453100";
+        const appLinks = [
+          `imeituan://www.meituan.com/meishi/${shopId}/`,
+          `imeituan://www.meituan.com/shop/${shopId}/`,
+          `imeituan://www.meituan.com/meishi/?shopid=${shopId}`,
+          "imeituan://www.meituan.com/"
+        ];
+        
+        // 尝试第一个深度链接
         const linkElement = document.createElement('a');
-        linkElement.href = "imeituan://www.meituan.com/";
+        linkElement.href = appLinks[0];
         linkElement.style.display = 'none';
         document.body.appendChild(linkElement);
         linkElement.click();
         document.body.removeChild(linkElement);
         
-        status.textContent = `测试1完成！\n\n${shopDetails}\n\n请检查美团APP是否打开`;
+        status.textContent = `测试1: APP跳转尝试中...\n\n${shopDetails}\n\n如果APP未打开，将使用网页版`;
+        
+        // 策略2: 备用网页版
+        setTimeout(() => {
+          const webUrl = PLATFORM_URLS.meituan;
+          window.open(webUrl, '_blank');
+          status.textContent = `测试1完成！\n\n${shopDetails}\n\n已尝试APP跳转，并打开网页版作为备用`;
+        }, 2000);
+        
       } catch (e) {
         console.log('测试1失败:', e);
         status.textContent = `测试1失败：${e.message}`;
       }
     }
     
-    // 测试2: 店铺ID链接
-    function testShopIdLink() {
+    // 测试2: APP检测跳转
+    function testAppDetectionJump() {
       const shopInfo = MEITUAN_SHOP_INFO;
       const shopDetails = `店铺名称：${shopInfo.name}\n店铺地址：${shopInfo.address}\n联系电话：${shopInfo.phone}`;
-      const shopId = "1033453100";
       
-      console.log('测试2: 店铺ID链接');
-      status.textContent = `测试2: 美团店铺ID链接\n\n${shopDetails}\n\n尝试链接: imeituan://www.meituan.com/meishi/${shopId}/`;
+      console.log('测试2: APP检测跳转');
+      status.textContent = `测试2: APP检测跳转\n\n${shopDetails}\n\n检测美团APP是否安装...`;
       
       try {
-        const linkElement = document.createElement('a');
-        linkElement.href = `imeituan://www.meituan.com/meishi/${shopId}/`;
-        linkElement.style.display = 'none';
-        document.body.appendChild(linkElement);
-        linkElement.click();
-        document.body.removeChild(linkElement);
+        // 检测APP是否安装的方法
+        const shopId = "1033453100";
+        const appLink = `imeituan://www.meituan.com/meishi/${shopId}/`;
+        const webLink = PLATFORM_URLS.meituan;
         
-        status.textContent = `测试2完成！\n\n${shopDetails}\n\n请检查美团APP是否打开并跳转到店铺页面`;
+        // 创建隐藏的iframe来检测APP
+        const iframe = document.createElement('iframe');
+        iframe.style.display = 'none';
+        iframe.src = appLink;
+        document.body.appendChild(iframe);
+        
+        // 设置超时检测
+        let appOpened = false;
+        const timeout = setTimeout(() => {
+          if (!appOpened) {
+            // APP未打开，使用网页版
+            window.open(webLink, '_blank');
+            status.textContent = `测试2完成！\n\n${shopDetails}\n\nAPP检测超时，已打开网页版`;
+          }
+          document.body.removeChild(iframe);
+        }, 3000);
+        
+        // 监听页面可见性变化（APP打开时页面会失去焦点）
+        const handleVisibilityChange = () => {
+          if (document.hidden) {
+            appOpened = true;
+            clearTimeout(timeout);
+            status.textContent = `测试2完成！\n\n${shopDetails}\n\n检测到美团APP已打开`;
+            document.removeEventListener('visibilitychange', handleVisibilityChange);
+          }
+        };
+        
+        document.addEventListener('visibilitychange', handleVisibilityChange);
+        
       } catch (e) {
         console.log('测试2失败:', e);
         status.textContent = `测试2失败：${e.message}`;
       }
     }
     
-    // 测试3: 搜索链接
-    function testSearchLink() {
+    // 测试3: 网页版链接
+    function testWebLink() {
       const shopInfo = MEITUAN_SHOP_INFO;
       const shopDetails = `店铺名称：${shopInfo.name}\n店铺地址：${shopInfo.address}\n联系电话：${shopInfo.phone}`;
+      const webUrl = PLATFORM_URLS.meituan;
       
-      console.log('测试3: 搜索链接');
-      status.textContent = `测试3: 美团搜索链接\n\n${shopDetails}\n\n尝试链接: imeituan://www.meituan.com/search/?keyword=李小寻造型`;
+      console.log('测试3: 网页版链接');
+      status.textContent = `测试3: 美团网页版链接\n\n${shopDetails}\n\n尝试链接: ${webUrl}`;
       
       try {
-        const linkElement = document.createElement('a');
-        linkElement.href = "imeituan://www.meituan.com/search/?keyword=李小寻造型";
-        linkElement.style.display = 'none';
-        document.body.appendChild(linkElement);
-        linkElement.click();
-        document.body.removeChild(linkElement);
-        
-        status.textContent = `测试3完成！\n\n${shopDetails}\n\n请检查美团APP是否打开并显示搜索结果`;
+        window.open(webUrl, '_blank');
+        status.textContent = `测试3完成！\n\n${shopDetails}\n\n网页版店铺页面已打开`;
       } catch (e) {
         console.log('测试3失败:', e);
         status.textContent = `测试3失败：${e.message}`;
       }
     }
     
-    // 测试4: 网页版链接
-    function testWebLink() {
+    // 测试4: 复制链接
+    function testCopyLink() {
       const shopInfo = MEITUAN_SHOP_INFO;
       const shopDetails = `店铺名称：${shopInfo.name}\n店铺地址：${shopInfo.address}\n联系电话：${shopInfo.phone}`;
       const webUrl = PLATFORM_URLS.meituan;
       
-      console.log('测试4: 网页版链接');
-      status.textContent = `测试4: 美团网页版链接\n\n${shopDetails}\n\n尝试链接: ${webUrl}`;
+      console.log('测试4: 复制链接');
+      status.textContent = `测试4: 复制店铺链接\n\n${shopDetails}\n\n正在复制链接到剪贴板...`;
       
       try {
-        window.open(webUrl, '_blank');
-        status.textContent = `测试4完成！\n\n${shopDetails}\n\n网页版店铺页面已打开`;
-      } catch (e) {
+        // 复制链接到剪贴板
+        navigator.clipboard.writeText(webUrl).then(() => {
+          status.textContent = `测试4完成！\n\n${shopDetails}\n\n店铺链接已复制到剪贴板！\n\n链接: ${webUrl}\n\n请手动打开美团APP，粘贴链接访问店铺`;
+        }).catch(() => {
+          // 备用方案：创建临时输入框
+          const textArea = document.createElement('textarea');
+          textArea.value = webUrl;
+          document.body.appendChild(textArea);
+          textArea.select();
+          document.execCommand('copy');
+          document.body.removeChild(textArea);
+          status.textContent = `测试4完成！\n\n${shopDetails}\n\n店铺链接已复制到剪贴板！\n\n链接: ${webUrl}\n\n请手动打开美团APP，粘贴链接访问店铺`;
+        });
+          } catch (e) {
         console.log('测试4失败:', e);
         status.textContent = `测试4失败：${e.message}`;
       }
@@ -301,10 +350,10 @@
     }
     
     // 绑定按钮事件
-    btnTest1.addEventListener("click", testAppDeepLink);
-    btnTest2.addEventListener("click", testShopIdLink);
-    btnTest3.addEventListener("click", testSearchLink);
-    btnTest4.addEventListener("click", testWebLink);
+    btnTest1.addEventListener("click", testSmartJump);
+    btnTest2.addEventListener("click", testAppDetectionJump);
+    btnTest3.addEventListener("click", testWebLink);
+    btnTest4.addEventListener("click", testCopyLink);
     btnTest5.addEventListener("click", testDouyinLink);
   </script>
   
