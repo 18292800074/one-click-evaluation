@@ -41,7 +41,11 @@
       </select>
 
       <div class="actions">
-        <button id="btnGen" class="btn-primary">测试跳转</button>
+        <button id="btnTest1" class="btn-primary">测试1: APP深度链接</button>
+        <button id="btnTest2" class="btn-primary">测试2: 店铺ID链接</button>
+        <button id="btnTest3" class="btn-primary">测试3: 搜索链接</button>
+        <button id="btnTest4" class="btn-primary">测试4: 网页版链接</button>
+        <button id="btnTest5" class="btn-primary">测试5: 抖音链接</button>
       </div>
 
       <div id="status" class="muted" style="margin-top:8px;"></div>
@@ -51,7 +55,11 @@
 
   <script>
     const $ = (id) => document.getElementById(id);
-    const btnGen = $("btnGen");
+    const btnTest1 = $("btnTest1");
+    const btnTest2 = $("btnTest2");
+    const btnTest3 = $("btnTest3");
+    const btnTest4 = $("btnTest4");
+    const btnTest5 = $("btnTest5");
     const status = $("status");
     
     // 平台地址配置
@@ -188,78 +196,116 @@
 
     // btnGen.addEventListener("click", generate); // 暂时注释掉生成文案功能
     
-    // 美团跳转功能
-    function jumpToMeituan() {
+    // 测试1: APP深度链接
+    function testAppDeepLink() {
       const shopInfo = MEITUAN_SHOP_INFO;
-      const shopDetails = `
-店铺名称：${shopInfo.name}
-店铺地址：${shopInfo.address}
-联系电话：${shopInfo.phone}`;
+      const shopDetails = `店铺名称：${shopInfo.name}\n店铺地址：${shopInfo.address}\n联系电话：${shopInfo.phone}`;
       
-      console.log('跳转到美团店铺...');
-      status.textContent = `正在跳转美团店铺...\n\n${shopDetails}`;
+      console.log('测试1: APP深度链接');
+      status.textContent = `测试1: 美团APP深度链接\n\n${shopDetails}\n\n尝试链接: imeituan://www.meituan.com/`;
       
       try {
-        // 方式1：尝试美团APP深度链接（使用店铺ID）
-        const shopId = "1033453100";
-        const meituanAppLinks = [
-          `imeituan://www.meituan.com/meishi/${shopId}/`,
-          `imeituan://www.meituan.com/shop/${shopId}/`,
-          `imeituan://www.meituan.com/meishi/?shopid=${shopId}`,
-          "imeituan://www.meituan.com/"
-        ];
-        
-        // 尝试第一个深度链接
         const linkElement = document.createElement('a');
-        linkElement.href = meituanAppLinks[0];
+        linkElement.href = "imeituan://www.meituan.com/";
         linkElement.style.display = 'none';
         document.body.appendChild(linkElement);
         linkElement.click();
         document.body.removeChild(linkElement);
         
-        status.textContent = `美团APP跳转尝试中...\n\n${shopDetails}\n\n如果美团APP没有自动打开，将使用网页版`;
-        
-        // 备用方案：打开网页版店铺链接
-        setTimeout(() => {
-          const webUrl = PLATFORM_URLS.meituan;
-          window.open(webUrl, '_blank');
-          status.textContent = `美团跳转完成！\n\n已打开网页版店铺页面\n\n${shopDetails}\n\n如果美团APP已安装，请手动打开APP查看`;
-        }, 2000);
-        
+        status.textContent = `测试1完成！\n\n${shopDetails}\n\n请检查美团APP是否打开`;
       } catch (e) {
-        console.log('美团跳转失败:', e);
-        // 直接打开网页版
-        const webUrl = PLATFORM_URLS.meituan;
-        window.open(webUrl, '_blank');
-        status.textContent = `美团跳转完成！\n\n已打开网页版店铺页面\n\n${shopDetails}`;
+        console.log('测试1失败:', e);
+        status.textContent = `测试1失败：${e.message}`;
       }
     }
     
-    // 抖音跳转功能
-    function jumpToDouyin() {
+    // 测试2: 店铺ID链接
+    function testShopIdLink() {
+      const shopInfo = MEITUAN_SHOP_INFO;
+      const shopDetails = `店铺名称：${shopInfo.name}\n店铺地址：${shopInfo.address}\n联系电话：${shopInfo.phone}`;
+      const shopId = "1033453100";
+      
+      console.log('测试2: 店铺ID链接');
+      status.textContent = `测试2: 美团店铺ID链接\n\n${shopDetails}\n\n尝试链接: imeituan://www.meituan.com/meishi/${shopId}/`;
+      
+      try {
+        const linkElement = document.createElement('a');
+        linkElement.href = `imeituan://www.meituan.com/meishi/${shopId}/`;
+        linkElement.style.display = 'none';
+        document.body.appendChild(linkElement);
+        linkElement.click();
+        document.body.removeChild(linkElement);
+        
+        status.textContent = `测试2完成！\n\n${shopDetails}\n\n请检查美团APP是否打开并跳转到店铺页面`;
+      } catch (e) {
+        console.log('测试2失败:', e);
+        status.textContent = `测试2失败：${e.message}`;
+      }
+    }
+    
+    // 测试3: 搜索链接
+    function testSearchLink() {
+      const shopInfo = MEITUAN_SHOP_INFO;
+      const shopDetails = `店铺名称：${shopInfo.name}\n店铺地址：${shopInfo.address}\n联系电话：${shopInfo.phone}`;
+      
+      console.log('测试3: 搜索链接');
+      status.textContent = `测试3: 美团搜索链接\n\n${shopDetails}\n\n尝试链接: imeituan://www.meituan.com/search/?keyword=李小寻造型`;
+      
+      try {
+        const linkElement = document.createElement('a');
+        linkElement.href = "imeituan://www.meituan.com/search/?keyword=李小寻造型";
+        linkElement.style.display = 'none';
+        document.body.appendChild(linkElement);
+        linkElement.click();
+        document.body.removeChild(linkElement);
+        
+        status.textContent = `测试3完成！\n\n${shopDetails}\n\n请检查美团APP是否打开并显示搜索结果`;
+      } catch (e) {
+        console.log('测试3失败:', e);
+        status.textContent = `测试3失败：${e.message}`;
+      }
+    }
+    
+    // 测试4: 网页版链接
+    function testWebLink() {
+      const shopInfo = MEITUAN_SHOP_INFO;
+      const shopDetails = `店铺名称：${shopInfo.name}\n店铺地址：${shopInfo.address}\n联系电话：${shopInfo.phone}`;
+      const webUrl = PLATFORM_URLS.meituan;
+      
+      console.log('测试4: 网页版链接');
+      status.textContent = `测试4: 美团网页版链接\n\n${shopDetails}\n\n尝试链接: ${webUrl}`;
+      
+      try {
+        window.open(webUrl, '_blank');
+        status.textContent = `测试4完成！\n\n${shopDetails}\n\n网页版店铺页面已打开`;
+      } catch (e) {
+        console.log('测试4失败:', e);
+        status.textContent = `测试4失败：${e.message}`;
+      }
+    }
+    
+    // 测试5: 抖音链接
+    function testDouyinLink() {
       const url = PLATFORM_URLS.douyin;
-      console.log('跳转到抖音...');
-      status.textContent = `正在跳转抖音...\n\n链接：${url}`;
+      
+      console.log('测试5: 抖音链接');
+      status.textContent = `测试5: 抖音店铺链接\n\n尝试链接: ${url}`;
       
       try {
         window.open(url, '_blank');
-        status.textContent = `抖音跳转完成！\n\n链接：${url}`;
+        status.textContent = `测试5完成！\n\n抖音店铺页面已打开\n\n链接: ${url}`;
       } catch (e) {
-        console.log('抖音跳转失败:', e);
-        status.textContent = `抖音跳转失败：${e.message}`;
+        console.log('测试5失败:', e);
+        status.textContent = `测试5失败：${e.message}`;
       }
     }
     
-    // 跳转功能
-    btnGen.addEventListener("click", () => {
-      const platform = $("shopPlatform").value;
-      
-      if (platform === "meituan") {
-        jumpToMeituan();
-      } else {
-        jumpToDouyin();
-      }
-    });
+    // 绑定按钮事件
+    btnTest1.addEventListener("click", testAppDeepLink);
+    btnTest2.addEventListener("click", testShopIdLink);
+    btnTest3.addEventListener("click", testSearchLink);
+    btnTest4.addEventListener("click", testWebLink);
+    btnTest5.addEventListener("click", testDouyinLink);
   </script>
   
 </body>
