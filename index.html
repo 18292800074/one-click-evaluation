@@ -36,17 +36,12 @@
 
       <label for="shopPlatform">选择平台</label>
       <select id="shopPlatform">
-        <option value="douyin">抖音店铺</option>
         <option value="meituan">美团店铺</option>
+        <option value="douyin">抖音店铺</option>
       </select>
 
       <div class="actions">
-        <button id="btnShortLink" class="btn-primary" style="background: #10b981; font-weight: bold;">✅ 短链接跳转</button>
-        <button id="btnBeautyDetail" class="btn-primary" style="background: #ff6b6b;">🔥 美发详情页</button>
-        <button id="btnLifeDetail" class="btn-primary" style="background: #ff6b6b;">🔥 生活服务详情</button>
-        <button id="btnAlbum" class="btn-primary">测试: 商家相册</button>
-        <button id="btnPoiParam" class="btn-primary">测试: POI参数</button>
-        <button id="btnCopy" class="btn-secondary">复制店铺信息</button>
+        <button id="btnJump" class="btn-primary" style="font-weight: bold;">跳转到店铺</button>
       </div>
 
       <div id="status" class="muted" style="margin-top:8px;"></div>
@@ -56,19 +51,13 @@
 
   <script>
     const $ = (id) => document.getElementById(id);
-    const btnShortLink = $("btnShortLink");
-    const btnBeautyDetail = $("btnBeautyDetail");
-    const btnLifeDetail = $("btnLifeDetail");
-    const btnAlbum = $("btnAlbum");
-    const btnPoiParam = $("btnPoiParam");
-    const btnCopy = $("btnCopy");
+    const btnJump = $("btnJump");
     const status = $("status");
     
-    // 平台地址配置
-    const PLATFORM_URLS = {
-      douyin: "https://v.douyin.com/J5Qzqzvyb8Y/",
-      meituan: "http://dpurl.cn/EHLLDrez",  // 美团短链接，会自动调起APP
-      meituanLong: "https://g.meituan.com/gfe/mmp-gc-poidetail/detail-page/detail?shopid=1033453100&utm_term=AandroidBgroupC12.44.203DweiboEpoiG2025101117141800000000000009052C1B83FF245D38601621B9373465CA165714723951899722153&lch=appshare_4a810e513fbc3171A5&utm_fromapp=copy&utm_medium=androidweb&userId=265394714&ticket_exchange_for_token=at%3AC5148CBE67C8533F2B1B2E5279AC1753%3AAQD6G1LqAAAAADAAAAC84csgc2EWnVZvtuvzAlnMnJ3PFsfx1OLg3uXREc-CX_AneucCWvzR5MYIgdHPSAe8Zdj0oWpqtUqwkxGcYWsg1S_rZw&utm_source=appshare&poiIdEncrypt=qB4r17787ba40abd9fe260a337935d72610ee8e63d7690a06106e1ce2a76ee7e798f8d2f49edd8a2b8b73625236509e42666b45860vxu5"
+    // 平台深度链接配置
+    const DEEP_LINKS = {
+      meituan: "imeituan://www.meituan.com/food/poi/detail?id=1033453100",  // 美团店铺深度链接
+      douyin: "snssdk1128://poi/detail/?id=7375105554814863423"  // 抖音店铺深度链接
     };
     
     // 美团店铺信息
@@ -199,28 +188,32 @@
 
     // btnGen.addEventListener("click", generate); // 暂时注释掉生成文案功能
     
-    // 通用测试函数
-    function testDeepLink(linkUrl, linkName) {
+    // 跳转到店铺
+    function jumpToShop() {
+      const platform = $("shopPlatform").value;
       const shopInfo = MEITUAN_SHOP_INFO;
       const shopDetails = `店铺名称：${shopInfo.name}\n店铺地址：${shopInfo.address}\n联系电话：${shopInfo.phone}`;
       
-      console.log(`测试 ${linkName}`);
-      status.textContent = `正在测试 ${linkName}...\n\n${shopDetails}\n\n深度链接: ${linkUrl}\n\n尝试调起美团APP...`;
+      const deepLink = DEEP_LINKS[platform];
+      const platformName = platform === "meituan" ? "美团" : "抖音";
+      
+      console.log(`跳转到${platformName}店铺`);
+      status.textContent = `正在调起${platformName}APP...\n\n${shopDetails}\n\n深度链接: ${deepLink}`;
       
       try {
-        let appOpened = false;
-        
         // 使用iframe尝试调起APP
-        const linkElement = document.createElement('iframe');
-        linkElement.style.display = 'none';
-        linkElement.src = linkUrl;
-        document.body.appendChild(linkElement);
+        const iframe = document.createElement('iframe');
+        iframe.style.display = 'none';
+        iframe.src = deepLink;
+        document.body.appendChild(iframe);
+        
+        let appOpened = false;
         
         // 监听页面可见性变化（APP打开时页面会失去焦点）
         const handleVisibilityChange = () => {
           if (document.hidden) {
             appOpened = true;
-            status.textContent = `✅ 成功！美团APP已调起！\n\n${linkName}\n深度链接: ${linkUrl}\n\n${shopDetails}\n\n请检查是否跳转到店铺主页`;
+            status.textContent = `✅ 成功！${platformName}APP已调起！\n\n${shopDetails}\n\n深度链接: ${deepLink}\n\n请检查是否跳转到店铺主页`;
             document.removeEventListener('visibilitychange', handleVisibilityChange);
           }
         };
@@ -229,103 +222,24 @@
         
         // 3秒后检测
         setTimeout(() => {
-          document.body.removeChild(linkElement);
+          if (iframe.parentNode) {
+            document.body.removeChild(iframe);
+          }
           document.removeEventListener('visibilitychange', handleVisibilityChange);
           
           if (!appOpened) {
-            status.textContent = `❌ ${linkName} 调起失败\n\n深度链接: ${linkUrl}\n\n${shopDetails}\n\n请尝试其他测试按钮`;
+            status.textContent = `❌ 调起${platformName}APP失败\n\n${shopDetails}\n\n深度链接: ${deepLink}\n\n请确保已安装${platformName}APP`;
           }
         }, 3000);
         
       } catch (e) {
-        console.log(`${linkName} 测试失败:`, e);
-        status.textContent = `❌ ${linkName} 测试失败：${e.message}\n\n${shopDetails}`;
-      }
-    }
-    
-    // 短链接跳转（直接使用美团APP打开）
-    function testShortLink() {
-      const shopInfo = MEITUAN_SHOP_INFO;
-      const shopDetails = `店铺名称：${shopInfo.name}\n店铺地址：${shopInfo.address}\n联系电话：${shopInfo.phone}`;
-      const shortUrl = PLATFORM_URLS.meituan;
-      
-      console.log('短链接跳转');
-      status.textContent = `正在跳转...\n\n${shopDetails}\n\n短链接: ${shortUrl}\n\n在手机上会自动调起美团APP并跳转到店铺主页`;
-      
-      try {
-        // 直接打开短链接，美团会自动识别并调起APP
-        window.location.href = shortUrl;
-        
-        status.textContent = `跳转中...\n\n${shopDetails}\n\n短链接: ${shortUrl}\n\n美团APP应该会自动打开并跳转到店铺主页`;
-        
-      } catch (e) {
-        console.log('短链接跳转失败:', e);
-        status.textContent = `短链接跳转失败：${e.message}\n\n${shopDetails}`;
-      }
-    }
-    
-    // 美发详情页（基于美食格式）
-    function testBeautyDetailLink() {
-      const shopId = "1033453100";
-      const linkUrl = `imeituan://www.meituan.com/beauty/poi/detail?id=${shopId}`;
-      testDeepLink(linkUrl, "美发详情页格式");
-    }
-    
-    // 生活服务详情页（基于美食格式）
-    function testLifeDetailLink() {
-      const shopId = "1033453100";
-      const linkUrl = `imeituan://www.meituan.com/life/poi/detail?id=${shopId}`;
-      testDeepLink(linkUrl, "生活服务详情页格式");
-    }
-    
-    // 商家相册（基于真实格式）
-    function testAlbumLink() {
-      const shopId = "1033453100";
-      const linkUrl = `imeituan://www.meituan.com/album/poi?id=${shopId}`;
-      testDeepLink(linkUrl, "商家相册格式");
-    }
-    
-    // POI参数格式（基于真实格式）
-    function testPoiParamLink() {
-      const shopId = "1033453100";
-      const linkUrl = `imeituan://www.meituan.com/poi?id=${shopId}`;
-      testDeepLink(linkUrl, "POI参数格式");
-    }
-    
-    // 复制店铺信息
-    function copyShopInfo() {
-      const shopInfo = MEITUAN_SHOP_INFO;
-      const shopDetails = `店铺名称：${shopInfo.name}\n店铺地址：${shopInfo.address}\n联系电话：${shopInfo.phone}\n\n请在美团APP中搜索店铺名称或拨打联系电话`;
-      
-      console.log('复制店铺信息');
-      status.textContent = `正在复制店铺信息...\n\n${shopDetails}`;
-      
-      try {
-        navigator.clipboard.writeText(shopDetails).then(() => {
-          status.textContent = `店铺信息已复制到剪贴板！\n\n${shopDetails}\n\n请打开美团APP，粘贴信息或手动搜索店铺`;
-        }).catch(() => {
-          // 备用方案：创建临时输入框
-          const textArea = document.createElement('textarea');
-          textArea.value = shopDetails;
-          document.body.appendChild(textArea);
-          textArea.select();
-          document.execCommand('copy');
-          document.body.removeChild(textArea);
-          status.textContent = `店铺信息已复制到剪贴板！\n\n${shopDetails}\n\n请打开美团APP，粘贴信息或手动搜索店铺`;
-        });
-      } catch (e) {
-        console.log('复制失败:', e);
-        status.textContent = `复制失败：${e.message}`;
+        console.log(`调起${platformName}APP失败:`, e);
+        status.textContent = `❌ 调起${platformName}APP失败：${e.message}\n\n${shopDetails}`;
       }
     }
     
     // 绑定按钮事件
-    btnShortLink.addEventListener("click", testShortLink);
-    btnBeautyDetail.addEventListener("click", testBeautyDetailLink);
-    btnLifeDetail.addEventListener("click", testLifeDetailLink);
-    btnAlbum.addEventListener("click", testAlbumLink);
-    btnPoiParam.addEventListener("click", testPoiParamLink);
-    btnCopy.addEventListener("click", copyShopInfo);
+    btnJump.addEventListener("click", jumpToShop);
   </script>
   
 </body>
