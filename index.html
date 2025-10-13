@@ -41,11 +41,14 @@
       </select>
 
       <div class="actions">
-        <button id="btnTemp" class="btn-primary" style="background: #ff6b6b;">临时测试: 新格式</button>
-        <button id="btnPoi" class="btn-primary">测试1: POI链接</button>
-        <button id="btnLife" class="btn-primary">测试2: 生活服务</button>
-        <button id="btnBeauty" class="btn-primary">测试3: 美发美容</button>
-        <button id="btnMain" class="btn-primary">测试4: 美团主页</button>
+        <button id="btnShortLink" class="btn-primary" style="background: #10b981; font-weight: bold;">✅ 短链接跳转</button>
+        <button id="btnAlbum" class="btn-primary" style="background: #ff6b6b;">测试1: 商家相册</button>
+        <button id="btnPoiParam" class="btn-primary" style="background: #ff6b6b;">测试2: POI参数</button>
+        <button id="btnTemp" class="btn-primary">测试3: 外卖格式</button>
+        <button id="btnPoi" class="btn-primary">测试4: POI路径</button>
+        <button id="btnLife" class="btn-primary">测试5: 生活服务</button>
+        <button id="btnBeauty" class="btn-primary">测试6: 美发美容</button>
+        <button id="btnMain" class="btn-secondary">测试7: 美团主页</button>
         <button id="btnCopy" class="btn-secondary">复制店铺信息</button>
       </div>
 
@@ -56,6 +59,9 @@
 
   <script>
     const $ = (id) => document.getElementById(id);
+    const btnShortLink = $("btnShortLink");
+    const btnAlbum = $("btnAlbum");
+    const btnPoiParam = $("btnPoiParam");
     const btnTemp = $("btnTemp");
     const btnPoi = $("btnPoi");
     const btnLife = $("btnLife");
@@ -67,7 +73,8 @@
     // 平台地址配置
     const PLATFORM_URLS = {
       douyin: "https://v.douyin.com/J5Qzqzvyb8Y/",
-      meituan: "https://g.meituan.com/gfe/mmp-gc-poidetail/detail-page/detail?shopid=1033453100&utm_term=AandroidBgroupC12.44.203DweiboEpoiG2025101117141800000000000009052C1B83FF245D38601621B9373465CA165714723951899722153&lch=appshare_4a810e513fbc3171A5&utm_fromapp=copy&utm_medium=androidweb&userId=265394714&ticket_exchange_for_token=at%3AC5148CBE67C8533F2B1B2E5279AC1753%3AAQD6G1LqAAAAADAAAAC84csgc2EWnVZvtuvzAlnMnJ3PFsfx1OLg3uXREc-CX_AneucCWvzR5MYIgdHPSAe8Zdj0oWpqtUqwkxGcYWsg1S_rZw&utm_source=appshare&poiIdEncrypt=qB4r17787ba40abd9fe260a337935d72610ee8e63d7690a06106e1ce2a76ee7e798f8d2f49edd8a2b8b73625236509e42666b45860vxu5"
+      meituan: "http://dpurl.cn/EHLLDrez",  // 美团短链接，会自动调起APP
+      meituanLong: "https://g.meituan.com/gfe/mmp-gc-poidetail/detail-page/detail?shopid=1033453100&utm_term=AandroidBgroupC12.44.203DweiboEpoiG2025101117141800000000000009052C1B83FF245D38601621B9373465CA165714723951899722153&lch=appshare_4a810e513fbc3171A5&utm_fromapp=copy&utm_medium=androidweb&userId=265394714&ticket_exchange_for_token=at%3AC5148CBE67C8533F2B1B2E5279AC1753%3AAQD6G1LqAAAAADAAAAC84csgc2EWnVZvtuvzAlnMnJ3PFsfx1OLg3uXREc-CX_AneucCWvzR5MYIgdHPSAe8Zdj0oWpqtUqwkxGcYWsg1S_rZw&utm_source=appshare&poiIdEncrypt=qB4r17787ba40abd9fe260a337935d72610ee8e63d7690a06106e1ce2a76ee7e798f8d2f49edd8a2b8b73625236509e42666b45860vxu5"
     };
     
     // 美团店铺信息
@@ -242,18 +249,53 @@
       }
     }
     
-    // 临时测试: 新格式链接
+    // 短链接跳转（直接使用美团APP打开）
+    function testShortLink() {
+      const shopInfo = MEITUAN_SHOP_INFO;
+      const shopDetails = `店铺名称：${shopInfo.name}\n店铺地址：${shopInfo.address}\n联系电话：${shopInfo.phone}`;
+      const shortUrl = PLATFORM_URLS.meituan;
+      
+      console.log('短链接跳转');
+      status.textContent = `正在跳转...\n\n${shopDetails}\n\n短链接: ${shortUrl}\n\n在手机上会自动调起美团APP并跳转到店铺主页`;
+      
+      try {
+        // 直接打开短链接，美团会自动识别并调起APP
+        window.location.href = shortUrl;
+        
+        status.textContent = `跳转中...\n\n${shopDetails}\n\n短链接: ${shortUrl}\n\n美团APP应该会自动打开并跳转到店铺主页`;
+        
+      } catch (e) {
+        console.log('短链接跳转失败:', e);
+        status.textContent = `短链接跳转失败：${e.message}\n\n${shopDetails}`;
+      }
+    }
+    
+    // 测试1: 商家相册（基于真实格式）
+    function testAlbumLink() {
+      const shopId = "1033453100";
+      const linkUrl = `imeituan://www.meituan.com/album/poi?id=${shopId}`;
+      testDeepLink(linkUrl, "商家相册格式");
+    }
+    
+    // 测试2: POI参数格式（基于真实格式）
+    function testPoiParamLink() {
+      const shopId = "1033453100";
+      const linkUrl = `imeituan://www.meituan.com/poi?id=${shopId}`;
+      testDeepLink(linkUrl, "POI参数格式");
+    }
+    
+    // 测试3: 外卖格式
     function testTempLink() {
       const shopId = "1033453100";
       const linkUrl = `imeituan://www.meituan.com/takeout/foods?poi_id=${shopId}&spu_id=0`;
-      testDeepLink(linkUrl, "临时测试新格式");
+      testDeepLink(linkUrl, "外卖格式");
     }
     
-    // 测试1: POI链接
+    // 测试4: POI路径格式
     function testPoiLink() {
       const shopId = "1033453100";
       const linkUrl = `imeituan://www.meituan.com/poi/${shopId}`;
-      testDeepLink(linkUrl, "POI链接");
+      testDeepLink(linkUrl, "POI路径格式");
     }
     
     // 测试2: 生活服务链接
@@ -304,6 +346,9 @@
     }
     
     // 绑定按钮事件
+    btnShortLink.addEventListener("click", testShortLink);
+    btnAlbum.addEventListener("click", testAlbumLink);
+    btnPoiParam.addEventListener("click", testPoiParamLink);
     btnTemp.addEventListener("click", testTempLink);
     btnPoi.addEventListener("click", testPoiLink);
     btnLife.addEventListener("click", testLifeLink);
