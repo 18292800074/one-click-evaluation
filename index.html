@@ -199,32 +199,66 @@
       const shopId = "1033453100";
       
       console.log('测试跳转');
-      status.textContent = `测试跳转\n\n${shopDetails}\n\n正在测试深度链接跳转...`;
+      status.textContent = `测试跳转\n\n${shopDetails}\n\n尝试多种深度链接格式...`;
       
-      try {
-        // 只测试你提供的这一个深度链接
-        const jumpUrl = `meituan://poi?shopId=${shopId}`;
-        
-        const linkElement = document.createElement('a');
-        linkElement.href = jumpUrl;
-        linkElement.style.display = 'none';
-        document.body.appendChild(linkElement);
-        linkElement.click();
-        document.body.removeChild(linkElement);
-        
-        status.textContent = `跳转测试中...\n\n${shopDetails}\n\n深度链接: ${jumpUrl}\n\n请检查美团APP是否打开并跳转到店铺页面`;
-        
-        // 备用方案：3秒后打开网页版
-        setTimeout(() => {
-          const webUrl = PLATFORM_URLS.meituan;
-          window.open(webUrl, '_blank');
-          status.textContent = `跳转测试完成！\n\n${shopDetails}\n\n深度链接: ${jumpUrl}\n\n已打开网页版作为备用方案\n\n网页版链接: ${webUrl}`;
-        }, 3000);
-        
-      } catch (e) {
-        console.log('跳转测试失败:', e);
-        status.textContent = `跳转测试失败：${e.message}`;
+      // 尝试多种深度链接格式（基于真实示例）
+      const jumpUrls = [
+        `imeituan://www.meituan.com/poi/${shopId}`,  // 基于真实示例的格式
+        `imeituan://www.meituan.com/meishi/${shopId}/`,  // 传统格式
+        `imeituan://www.meituan.com/shop/${shopId}/`,  // shop格式
+        `imeituan://www.meituan.com/`,  // 基础链接
+        `imeituan://www.meituan.com/meishi/`  // 美食分类
+      ];
+      
+      let currentTest = 0;
+      
+      function testNextUrl() {
+        if (currentTest < jumpUrls.length) {
+          const jumpUrl = jumpUrls[currentTest];
+          
+          status.textContent = `测试跳转 ${currentTest + 1}/${jumpUrls.length}\n\n${shopDetails}\n\n深度链接: ${jumpUrl}\n\n请检查美团APP是否打开...`;
+          
+          try {
+            const linkElement = document.createElement('a');
+            linkElement.href = jumpUrl;
+            linkElement.style.display = 'none';
+            document.body.appendChild(linkElement);
+            linkElement.click();
+            document.body.removeChild(linkElement);
+            
+            // 等待用户反馈
+            setTimeout(() => {
+              const success = confirm(`深度链接测试 ${currentTest + 1}/${jumpUrls.length}\n\n链接: ${jumpUrl}\n\n请检查美团APP：\n1. 是否打开了？\n2. 是否跳转到了店铺页面？\n\n点击"确定"表示成功调起APP\n点击"取消"表示没有调起APP`);
+              
+              if (success) {
+                alert(`🎉 成功！找到可用的深度链接！\n\n成功链接: ${jumpUrl}\n\n${shopDetails}`);
+                status.textContent = `✅ 找到可用链接！\n\n成功链接: ${jumpUrl}\n\n${shopDetails}`;
+                return; // 停止测试
+              }
+              
+              currentTest++;
+              testNextUrl();
+            }, 2000); // 2秒后询问结果
+            
+          } catch (e) {
+            console.log(`链接 ${currentTest + 1} 测试失败:`, e);
+            currentTest++;
+            setTimeout(testNextUrl, 1000);
+          }
+        } else {
+          // 所有链接测试完成
+          status.textContent = `所有深度链接测试完成！\n\n${shopDetails}\n\n没有找到可用的深度链接，将打开网页版`;
+          
+          // 备用方案：打开网页版
+          setTimeout(() => {
+            const webUrl = PLATFORM_URLS.meituan;
+            window.open(webUrl, '_blank');
+            status.textContent = `深度链接测试完成！\n\n${shopDetails}\n\n测试了 ${jumpUrls.length} 个深度链接\n\n已打开网页版作为备用方案\n\n网页版链接: ${webUrl}`;
+          }, 1000);
+        }
       }
+      
+      testNextUrl();
     }
     
     // 复制店铺信息
