@@ -239,28 +239,54 @@
         status.textContent = `文案已复制，正在打开${platformName}店铺…`;
         
         if (platform === "meituan") {
-          // 美团特殊处理：直接启动美团APP
+          // 美团特殊处理：提供多种跳转方式
           const shopInfo = MEITUAN_SHOP_INFO;
           
+          // 显示店铺信息
+          const shopDetails = `
+店铺名称：${shopInfo.name}
+店铺地址：${shopInfo.address}
+联系电话：${shopInfo.phone}`;
+          
+          status.textContent = `文案已复制！正在尝试跳转美团店铺...\n\n${shopDetails}`;
+          
+          // 尝试多种跳转方式
+          let jumpSuccess = false;
+          
+          // 方式1：尝试美团APP深度链接
           try {
-            // 直接尝试打开美团APP
-            window.location.href = MEITUAN_APP_SCHEME;
+            const meituanAppLink = "imeituan://www.meituan.com/";
+            const linkElement = document.createElement('a');
+            linkElement.href = meituanAppLink;
+            linkElement.style.display = 'none';
+            document.body.appendChild(linkElement);
+            linkElement.click();
+            document.body.removeChild(linkElement);
             
-            // 显示店铺信息
-            status.textContent = `文案已复制！正在启动美团APP...\n\n店铺信息：\n${shopInfo.name}\n${shopInfo.address}\n${shopInfo.phone}`;
-            
-            // 如果APP启动失败，提供备用方案
             setTimeout(() => {
-              if (confirm(`文案已复制！\n\n店铺信息：\n${shopInfo.name}\n${shopInfo.address}\n${shopInfo.phone}\n\n如果美团APP没有自动打开，请：\n1. 手动打开美团APP\n2. 搜索"${shopInfo.name}"\n3. 或拨打${shopInfo.phone}联系店铺\n\n点击确定继续`)) {
-                // 用户确认后不做任何操作，让用户手动操作
-                status.textContent = `文案已复制！请手动打开美团APP搜索"${shopInfo.name}"或拨打${shopInfo.phone}`;
+              if (!jumpSuccess) {
+                // 方式2：尝试网页版美团
+                window.open("https://www.meituan.com/", '_blank');
+                status.textContent = `文案已复制！已打开美团网页版\n\n${shopDetails}\n\n请手动搜索"${shopInfo.name}"或拨打${shopInfo.phone}`;
               }
-            }, 3000);
+            }, 2000);
             
           } catch (e) {
-            // 如果APP启动失败，显示店铺信息
-            status.textContent = `文案已复制！请手动打开美团APP搜索"${shopInfo.name}"或拨打${shopInfo.phone}`;
+            console.log('APP跳转失败:', e);
           }
+          
+          // 方式3：显示详细指导
+          setTimeout(() => {
+            const userChoice = confirm(`文案已复制！\n\n${shopDetails}\n\n由于浏览器限制，无法直接跳转到美团店铺主页\n\n请按以下步骤操作：\n1. 打开美团APP\n2. 搜索"${shopInfo.name}"\n3. 找到"李小寻造型（际华广场店）"\n4. 或直接拨打${shopInfo.phone}联系店铺\n\n点击确定查看店铺详情`);
+            
+            if (userChoice) {
+              // 打开美团网页版作为备用
+              window.open("https://www.meituan.com/search/?keyword=李小寻造型", '_blank');
+              status.textContent = `文案已复制！已打开美团搜索页面\n\n${shopDetails}\n\n请搜索"${shopInfo.name}"找到店铺`;
+            } else {
+              status.textContent = `文案已复制！\n\n${shopDetails}\n\n请手动打开美团APP搜索"${shopInfo.name}"`;
+            }
+          }, 3000);
         } else {
           // 抖音处理
           const url = PLATFORM_URLS[platform];
