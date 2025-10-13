@@ -41,11 +41,7 @@
       </select>
 
       <div class="actions">
-        <button id="btnTest1" class="btn-primary">测试1: 智能跳转</button>
-        <button id="btnTest2" class="btn-primary">测试2: APP检测跳转</button>
-        <button id="btnTest3" class="btn-primary">测试3: 网页版链接</button>
-        <button id="btnTest4" class="btn-primary">测试4: 复制链接</button>
-        <button id="btnTest5" class="btn-primary">测试5: 抖音链接</button>
+        <button id="btnTest" class="btn-primary">智能跳转测试</button>
       </div>
 
       <div id="status" class="muted" style="margin-top:8px;"></div>
@@ -55,11 +51,7 @@
 
   <script>
     const $ = (id) => document.getElementById(id);
-    const btnTest1 = $("btnTest1");
-    const btnTest2 = $("btnTest2");
-    const btnTest3 = $("btnTest3");
-    const btnTest4 = $("btnTest4");
-    const btnTest5 = $("btnTest5");
+    const btnTest = $("btnTest");
     const status = $("status");
     
     // 平台地址配置
@@ -196,165 +188,99 @@
 
     // btnGen.addEventListener("click", generate); // 暂时注释掉生成文案功能
     
-    // 测试1: 智能跳转
+    // 智能跳转测试
     function testSmartJump() {
       const shopInfo = MEITUAN_SHOP_INFO;
       const shopDetails = `店铺名称：${shopInfo.name}\n店铺地址：${shopInfo.address}\n联系电话：${shopInfo.phone}`;
       
-      console.log('测试1: 智能跳转');
-      status.textContent = `测试1: 智能跳转\n\n${shopDetails}\n\n尝试多种跳转方式...`;
+      console.log('智能跳转测试');
+      status.textContent = `智能跳转测试\n\n${shopDetails}\n\n将逐一测试不同的深度链接格式...`;
       
-      try {
-        // 策略1: 尝试美团APP深度链接
-        const shopId = "1033453100";
-        const appLinks = [
-          `imeituan://www.meituan.com/meishi/${shopId}/`,
-          `imeituan://www.meituan.com/shop/${shopId}/`,
-          `imeituan://www.meituan.com/meishi/?shopid=${shopId}`,
-          "imeituan://www.meituan.com/"
-        ];
-        
-        // 尝试第一个深度链接
-        const linkElement = document.createElement('a');
-        linkElement.href = appLinks[0];
-        linkElement.style.display = 'none';
-        document.body.appendChild(linkElement);
-        linkElement.click();
-        document.body.removeChild(linkElement);
-        
-        status.textContent = `测试1: APP跳转尝试中...\n\n${shopDetails}\n\n如果APP未打开，将使用网页版`;
-        
-        // 策略2: 备用网页版
-        setTimeout(() => {
-          const webUrl = PLATFORM_URLS.meituan;
-          window.open(webUrl, '_blank');
-          status.textContent = `测试1完成！\n\n${shopDetails}\n\n已尝试APP跳转，并打开网页版作为备用`;
-        }, 2000);
-        
-      } catch (e) {
-        console.log('测试1失败:', e);
-        status.textContent = `测试1失败：${e.message}`;
-      }
-    }
-    
-    // 测试2: APP检测跳转
-    function testAppDetectionJump() {
-      const shopInfo = MEITUAN_SHOP_INFO;
-      const shopDetails = `店铺名称：${shopInfo.name}\n店铺地址：${shopInfo.address}\n联系电话：${shopInfo.phone}`;
+      const shopId = "1033453100";
+      const shopName = encodeURIComponent(shopInfo.name);
       
-      console.log('测试2: APP检测跳转');
-      status.textContent = `测试2: APP检测跳转\n\n${shopDetails}\n\n检测美团APP是否安装...`;
+      // 多种深度链接格式
+      const deepLinks = [
+        {
+          name: "店铺ID链接1",
+          url: `imeituan://www.meituan.com/meishi/${shopId}/`,
+          description: "使用店铺ID的meishi链接"
+        },
+        {
+          name: "店铺ID链接2", 
+          url: `imeituan://www.meituan.com/shop/${shopId}/`,
+          description: "使用店铺ID的shop链接"
+        },
+        {
+          name: "店铺名称链接",
+          url: `imeituan://www.meituan.com/meishi/?shopname=${shopName}`,
+          description: "使用店铺名称的链接"
+        },
+        {
+          name: "搜索链接",
+          url: `imeituan://www.meituan.com/search/?keyword=${shopName}`,
+          description: "搜索店铺名称"
+        },
+        {
+          name: "基础链接",
+          url: "imeituan://www.meituan.com/",
+          description: "美团APP主页"
+        }
+      ];
       
-      try {
-        // 检测APP是否安装的方法
-        const shopId = "1033453100";
-        const appLink = `imeituan://www.meituan.com/meishi/${shopId}/`;
-        const webLink = PLATFORM_URLS.meituan;
-        
-        // 创建隐藏的iframe来检测APP
-        const iframe = document.createElement('iframe');
-        iframe.style.display = 'none';
-        iframe.src = appLink;
-        document.body.appendChild(iframe);
-        
-        // 设置超时检测
-        let appOpened = false;
-        const timeout = setTimeout(() => {
-          if (!appOpened) {
-            // APP未打开，使用网页版
-            window.open(webLink, '_blank');
-            status.textContent = `测试2完成！\n\n${shopDetails}\n\nAPP检测超时，已打开网页版`;
-          }
-          document.body.removeChild(iframe);
-        }, 3000);
-        
-        // 监听页面可见性变化（APP打开时页面会失去焦点）
-        const handleVisibilityChange = () => {
-          if (document.hidden) {
-            appOpened = true;
-            clearTimeout(timeout);
-            status.textContent = `测试2完成！\n\n${shopDetails}\n\n检测到美团APP已打开`;
-            document.removeEventListener('visibilitychange', handleVisibilityChange);
-          }
-        };
-        
-        document.addEventListener('visibilitychange', handleVisibilityChange);
-        
-      } catch (e) {
-        console.log('测试2失败:', e);
-        status.textContent = `测试2失败：${e.message}`;
-      }
-    }
-    
-    // 测试3: 网页版链接
-    function testWebLink() {
-      const shopInfo = MEITUAN_SHOP_INFO;
-      const shopDetails = `店铺名称：${shopInfo.name}\n店铺地址：${shopInfo.address}\n联系电话：${shopInfo.phone}`;
-      const webUrl = PLATFORM_URLS.meituan;
+      let currentTest = 0;
       
-      console.log('测试3: 网页版链接');
-      status.textContent = `测试3: 美团网页版链接\n\n${shopDetails}\n\n尝试链接: ${webUrl}`;
-      
-      try {
-        window.open(webUrl, '_blank');
-        status.textContent = `测试3完成！\n\n${shopDetails}\n\n网页版店铺页面已打开`;
-      } catch (e) {
-        console.log('测试3失败:', e);
-        status.textContent = `测试3失败：${e.message}`;
-      }
-    }
-    
-    // 测试4: 复制链接
-    function testCopyLink() {
-      const shopInfo = MEITUAN_SHOP_INFO;
-      const shopDetails = `店铺名称：${shopInfo.name}\n店铺地址：${shopInfo.address}\n联系电话：${shopInfo.phone}`;
-      const webUrl = PLATFORM_URLS.meituan;
-      
-      console.log('测试4: 复制链接');
-      status.textContent = `测试4: 复制店铺链接\n\n${shopDetails}\n\n正在复制链接到剪贴板...`;
-      
-      try {
-        // 复制链接到剪贴板
-        navigator.clipboard.writeText(webUrl).then(() => {
-          status.textContent = `测试4完成！\n\n${shopDetails}\n\n店铺链接已复制到剪贴板！\n\n链接: ${webUrl}\n\n请手动打开美团APP，粘贴链接访问店铺`;
-        }).catch(() => {
-          // 备用方案：创建临时输入框
-          const textArea = document.createElement('textarea');
-          textArea.value = webUrl;
-          document.body.appendChild(textArea);
-          textArea.select();
-          document.execCommand('copy');
-          document.body.removeChild(textArea);
-          status.textContent = `测试4完成！\n\n${shopDetails}\n\n店铺链接已复制到剪贴板！\n\n链接: ${webUrl}\n\n请手动打开美团APP，粘贴链接访问店铺`;
-        });
+      function testNextLink() {
+        if (currentTest < deepLinks.length) {
+          const link = deepLinks[currentTest];
+          
+          status.textContent = `智能跳转测试: ${link.name}\n\n${shopDetails}\n\n${link.description}\n\n链接: ${link.url}\n\n请检查美团APP是否打开并跳转到店铺页面...`;
+          
+          try {
+            const linkElement = document.createElement('a');
+            linkElement.href = link.url;
+            linkElement.style.display = 'none';
+            document.body.appendChild(linkElement);
+            linkElement.click();
+            document.body.removeChild(linkElement);
+            
+            // 等待用户反馈
+            setTimeout(() => {
+              const success = confirm(`深度链接测试 ${currentTest + 1}/${deepLinks.length}\n\n${link.name}\n链接: ${link.url}\n\n请检查美团APP：\n1. 是否打开了？\n2. 是否跳转到了"${shopInfo.name}"店铺页面？\n\n点击"确定"表示成功跳转到店铺页面\n点击"取消"表示没有跳转到店铺页面`);
+              
+              if (success) {
+                alert(`🎉 成功！找到可用的深度链接！\n\n成功链接: ${link.url}\n\n${shopDetails}`);
+                status.textContent = `✅ 找到可用链接！\n\n成功链接: ${link.url}\n\n${shopDetails}`;
+                return; // 停止测试
+              }
+              
+              currentTest++;
+              testNextLink();
+            }, 3000); // 3秒后询问结果
+            
           } catch (e) {
-        console.log('测试4失败:', e);
-        status.textContent = `测试4失败：${e.message}`;
+            console.log(`链接 ${currentTest + 1} 测试失败:`, e);
+            currentTest++;
+            setTimeout(testNextLink, 1000);
+          }
+        } else {
+          // 所有链接测试完成
+          status.textContent = `所有深度链接测试完成！\n\n${shopDetails}\n\n如果美团APP没有跳转到店铺页面，将使用网页版链接`;
+          
+          // 备用方案：打开网页版
+          setTimeout(() => {
+            const webUrl = PLATFORM_URLS.meituan;
+            window.open(webUrl, '_blank');
+            status.textContent = `智能跳转测试完成！\n\n${shopDetails}\n\n测试了 ${deepLinks.length} 个深度链接\n\n已打开网页版作为备用方案\n\n网页版链接: ${webUrl}`;
+          }, 1000);
+        }
       }
-    }
-    
-    // 测试5: 抖音链接
-    function testDouyinLink() {
-      const url = PLATFORM_URLS.douyin;
       
-      console.log('测试5: 抖音链接');
-      status.textContent = `测试5: 抖音店铺链接\n\n尝试链接: ${url}`;
-      
-      try {
-        window.open(url, '_blank');
-        status.textContent = `测试5完成！\n\n抖音店铺页面已打开\n\n链接: ${url}`;
-      } catch (e) {
-        console.log('测试5失败:', e);
-        status.textContent = `测试5失败：${e.message}`;
-      }
+      testNextLink();
     }
     
     // 绑定按钮事件
-    btnTest1.addEventListener("click", testSmartJump);
-    btnTest2.addEventListener("click", testAppDetectionJump);
-    btnTest3.addEventListener("click", testWebLink);
-    btnTest4.addEventListener("click", testCopyLink);
-    btnTest5.addEventListener("click", testDouyinLink);
+    btnTest.addEventListener("click", testSmartJump);
   </script>
   
 </body>
