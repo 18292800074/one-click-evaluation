@@ -42,13 +42,10 @@
 
       <div class="actions">
         <button id="btnShortLink" class="btn-primary" style="background: #10b981; font-weight: bold;">✅ 短链接跳转</button>
-        <button id="btnAlbum" class="btn-primary" style="background: #ff6b6b;">测试1: 商家相册</button>
-        <button id="btnPoiParam" class="btn-primary" style="background: #ff6b6b;">测试2: POI参数</button>
-        <button id="btnTemp" class="btn-primary">测试3: 外卖格式</button>
-        <button id="btnPoi" class="btn-primary">测试4: POI路径</button>
-        <button id="btnLife" class="btn-primary">测试5: 生活服务</button>
-        <button id="btnBeauty" class="btn-primary">测试6: 美发美容</button>
-        <button id="btnMain" class="btn-secondary">测试7: 美团主页</button>
+        <button id="btnBeautyDetail" class="btn-primary" style="background: #ff6b6b;">🔥 美发详情页</button>
+        <button id="btnLifeDetail" class="btn-primary" style="background: #ff6b6b;">🔥 生活服务详情</button>
+        <button id="btnAlbum" class="btn-primary">测试: 商家相册</button>
+        <button id="btnPoiParam" class="btn-primary">测试: POI参数</button>
         <button id="btnCopy" class="btn-secondary">复制店铺信息</button>
       </div>
 
@@ -60,13 +57,10 @@
   <script>
     const $ = (id) => document.getElementById(id);
     const btnShortLink = $("btnShortLink");
+    const btnBeautyDetail = $("btnBeautyDetail");
+    const btnLifeDetail = $("btnLifeDetail");
     const btnAlbum = $("btnAlbum");
     const btnPoiParam = $("btnPoiParam");
-    const btnTemp = $("btnTemp");
-    const btnPoi = $("btnPoi");
-    const btnLife = $("btnLife");
-    const btnBeauty = $("btnBeauty");
-    const btnMain = $("btnMain");
     const btnCopy = $("btnCopy");
     const status = $("status");
     
@@ -270,52 +264,32 @@
       }
     }
     
-    // 测试1: 商家相册（基于真实格式）
+    // 美发详情页（基于美食格式）
+    function testBeautyDetailLink() {
+      const shopId = "1033453100";
+      const linkUrl = `imeituan://www.meituan.com/beauty/poi/detail?id=${shopId}`;
+      testDeepLink(linkUrl, "美发详情页格式");
+    }
+    
+    // 生活服务详情页（基于美食格式）
+    function testLifeDetailLink() {
+      const shopId = "1033453100";
+      const linkUrl = `imeituan://www.meituan.com/life/poi/detail?id=${shopId}`;
+      testDeepLink(linkUrl, "生活服务详情页格式");
+    }
+    
+    // 商家相册（基于真实格式）
     function testAlbumLink() {
       const shopId = "1033453100";
       const linkUrl = `imeituan://www.meituan.com/album/poi?id=${shopId}`;
       testDeepLink(linkUrl, "商家相册格式");
     }
     
-    // 测试2: POI参数格式（基于真实格式）
+    // POI参数格式（基于真实格式）
     function testPoiParamLink() {
       const shopId = "1033453100";
       const linkUrl = `imeituan://www.meituan.com/poi?id=${shopId}`;
       testDeepLink(linkUrl, "POI参数格式");
-    }
-    
-    // 测试3: 外卖格式
-    function testTempLink() {
-      const shopId = "1033453100";
-      const linkUrl = `imeituan://www.meituan.com/takeout/foods?poi_id=${shopId}&spu_id=0`;
-      testDeepLink(linkUrl, "外卖格式");
-    }
-    
-    // 测试4: POI路径格式
-    function testPoiLink() {
-      const shopId = "1033453100";
-      const linkUrl = `imeituan://www.meituan.com/poi/${shopId}`;
-      testDeepLink(linkUrl, "POI路径格式");
-    }
-    
-    // 测试2: 生活服务链接
-    function testLifeLink() {
-      const shopId = "1033453100";
-      const linkUrl = `imeituan://www.meituan.com/life/${shopId}`;
-      testDeepLink(linkUrl, "生活服务链接");
-    }
-    
-    // 测试3: 美发美容链接
-    function testBeautyLink() {
-      const shopId = "1033453100";
-      const linkUrl = `imeituan://www.meituan.com/beauty/${shopId}`;
-      testDeepLink(linkUrl, "美发美容链接");
-    }
-    
-    // 测试4: 美团主页
-    function testMainLink() {
-      const linkUrl = `imeituan://www.meituan.com/`;
-      testDeepLink(linkUrl, "美团主页");
     }
     
     // 复制店铺信息
@@ -347,13 +321,10 @@
     
     // 绑定按钮事件
     btnShortLink.addEventListener("click", testShortLink);
+    btnBeautyDetail.addEventListener("click", testBeautyDetailLink);
+    btnLifeDetail.addEventListener("click", testLifeDetailLink);
     btnAlbum.addEventListener("click", testAlbumLink);
     btnPoiParam.addEventListener("click", testPoiParamLink);
-    btnTemp.addEventListener("click", testTempLink);
-    btnPoi.addEventListener("click", testPoiLink);
-    btnLife.addEventListener("click", testLifeLink);
-    btnBeauty.addEventListener("click", testBeautyLink);
-    btnMain.addEventListener("click", testMainLink);
     btnCopy.addEventListener("click", copyShopInfo);
   </script>
   
