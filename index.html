@@ -5,115 +5,276 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>优质评价文案生成器</title>
   <style>
-    :root { color-scheme: light dark; }
+    * { 
+      box-sizing: border-box; 
+      -webkit-tap-highlight-color: transparent;
+    }
     body { 
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif; 
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif; 
       margin: 0; 
       padding: 0; 
       background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
       min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
     }
-    .container { max-width: 720px; margin: 0 auto; padding: 24px 16px 48px; }
+    .container { 
+      max-width: 640px; 
+      margin: 0 auto; 
+      padding: 20px 16px 40px; 
+    }
     .card { 
       background: #fff; 
       border-radius: 16px; 
-      box-shadow: 0 8px 32px rgba(0,0,0,0.12); 
-      padding: 28px; 
-      backdrop-filter: blur(10px);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.15); 
+      padding: 24px 20px; 
     }
     h1 { 
-      font-size: 28px; 
+      font-size: 24px; 
       margin: 0 0 8px; 
       background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
       font-weight: 700;
+      text-align: center;
     }
-    label { display: block; font-size: 14px; color: #555; margin: 16px 0 8px; font-weight: 500; }
-    input[type="checkbox"] { cursor: pointer; }
+    label { 
+      display: block; 
+      font-size: 15px; 
+      color: #333; 
+      margin: 18px 0 10px; 
+      font-weight: 600; 
+    }
+    
+    /* 修复微信浏览器下拉框样式问题 */
     select { 
       width: 100%; 
-      box-sizing: border-box; 
-      padding: 12px 14px; 
+      padding: 14px 16px; 
       border-radius: 10px; 
       border: 2px solid #e5e7eb; 
       outline: none; 
-      font-size: 14px; 
+      font-size: 16px;  /* 加大字体防止微信缩放 */
       background: #fff;
-      transition: border-color 0.3s;
+      color: #333;
+      font-weight: 500;
+      -webkit-appearance: none;  /* 移除默认样式 */
+      -moz-appearance: none;
+      appearance: none;
+      background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+      background-repeat: no-repeat;
+      background-position: right 12px center;
+      background-size: 20px;
+      padding-right: 40px;
+      cursor: pointer;
     }
-    select:focus { border-color: #667eea; }
-    .actions { display: flex; gap: 12px; margin-top: 20px; flex-wrap: wrap; }
+    select:focus { 
+      border-color: #667eea; 
+      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+    select option {
+      padding: 10px;
+      font-size: 16px;
+      color: #333;
+    }
+    
+    .actions { 
+      display: flex; 
+      gap: 12px; 
+      margin-top: 24px; 
+      flex-direction: column;  /* 改为垂直排列，更适合手机 */
+    }
     button { 
       cursor: pointer; 
       border: none; 
-      padding: 12px 20px; 
-      border-radius: 10px; 
-      font-size: 15px; 
-      font-weight: 500;
-      transition: all 0.3s;
-      flex: 1;
-      min-width: 140px;
+      padding: 16px 20px; 
+      border-radius: 12px; 
+      font-size: 16px; 
+      font-weight: 600;
+      transition: all 0.2s;
+      width: 100%;
+      -webkit-appearance: none;
+      touch-action: manipulation;  /* 优化触摸体验 */
     }
-    button:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
-    button:active { transform: translateY(0); }
-    .btn-primary { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: #fff; }
-    .btn-secondary { background: #f3f4f6; color: #374151; border: 2px solid #e5e7eb; }
-    .btn-secondary:disabled { opacity: 0.5; cursor: not-allowed; }
+    button:active { 
+      transform: scale(0.98); 
+      opacity: 0.9;
+    }
+    .btn-primary { 
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
+      color: #fff;
+      box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+    }
+    .btn-secondary { 
+      background: #f3f4f6; 
+      color: #374151; 
+      border: 2px solid #e5e7eb; 
+    }
+    .btn-secondary:disabled { 
+      opacity: 0.4; 
+      cursor: not-allowed; 
+    }
     .result { 
       margin-top: 20px; 
-      padding: 16px; 
-      background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%); 
+      padding: 18px; 
+      background: #fffbeb; 
       border: 2px solid #fbbf24; 
       border-radius: 12px; 
       white-space: pre-wrap; 
       word-break: break-word; 
       font-size: 15px; 
       line-height: 1.8;
-      box-shadow: 0 4px 12px rgba(251,191,36,0.2);
+      color: #78350f;
     }
     .tips { 
       color: #6b7280; 
       font-size: 13px; 
-      margin-top: 6px; 
       padding: 12px; 
-      background: #f9fafb; 
-      border-radius: 8px;
-      border-left: 3px solid #667eea;
+      background: #f0f9ff; 
+      border-radius: 10px;
+      border-left: 4px solid #667eea;
+      margin-bottom: 20px;
     }
-    .muted { color: #64748b; font-size: 13px; margin-top: 12px; }
+    .muted { 
+      color: #64748b; 
+      font-size: 13px; 
+      margin-top: 12px; 
+      text-align: center;
+    }
     .footer { 
       text-align: center; 
       color: #fff; 
-      font-size: 13px; 
-      margin-top: 20px; 
+      font-size: 12px; 
+      margin-top: 24px; 
       opacity: 0.9;
     }
     .checkbox-group {
       display: flex; 
       flex-wrap: wrap; 
-      gap: 10px; 
-      margin: 8px 0;
+      gap: 8px; 
+      margin: 10px 0;
     }
     .checkbox-label {
-      display: flex; 
+      display: inline-flex; 
       align-items: center; 
       gap: 6px; 
-      font-size: 14px; 
+      font-size: 15px; 
       color: #555; 
       cursor: pointer;
-      padding: 6px 12px;
+      padding: 10px 16px;
       background: #f9fafb;
-      border-radius: 8px;
-      transition: all 0.3s;
+      border-radius: 20px;  /* 更圆润的样式 */
+      transition: all 0.2s;
+      border: 2px solid transparent;
+      user-select: none;
+      -webkit-user-select: none;
     }
-    .checkbox-label:hover {
-      background: #e5e7eb;
+    .checkbox-label:active {
+      transform: scale(0.95);
     }
-    .checkbox-label input:checked + span {
+    .checkbox-label input {
+      margin: 0;
+      width: 18px;
+      height: 18px;
+      cursor: pointer;
+    }
+    .checkbox-label input:checked {
+      accent-color: #667eea;
+    }
+    .checkbox-label:has(input:checked) {
+      background: #eef2ff;
+      border-color: #667eea;
+    }
+    .checkbox-label:has(input:checked) span {
       color: #667eea;
       font-weight: 600;
+    }
+    
+    /* 移动端优化 */
+    @media (max-width: 640px) {
+      .container { padding: 16px 12px 32px; }
+      .card { padding: 20px 16px; }
+      h1 { font-size: 22px; }
+      .checkbox-label { padding: 8px 14px; font-size: 14px; }
+    }
+    
+    /* 微信引导遮罩 */
+    .wechat-mask {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.95);
+      z-index: 10000;
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .wechat-mask.show {
+      display: flex;
+    }
+    .wechat-arrow {
+      position: absolute;
+      top: 10px;
+      right: 20px;
+      width: 0;
+      height: 0;
+      border-left: 30px solid transparent;
+      border-right: 30px solid transparent;
+      border-top: 40px solid #fff;
+      animation: bounce 1s infinite;
+    }
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(10px); }
+    }
+    .wechat-content {
+      background: #fff;
+      border-radius: 16px;
+      padding: 32px 24px;
+      max-width: 340px;
+      text-align: center;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+    }
+    .wechat-content .icon {
+      font-size: 48px;
+      margin-bottom: 16px;
+    }
+    .wechat-content h2 {
+      margin: 0 0 12px;
+      font-size: 20px;
+      color: #333;
+      font-weight: 700;
+    }
+    .wechat-content p {
+      margin: 8px 0;
+      color: #666;
+      font-size: 15px;
+      line-height: 1.8;
+    }
+    .wechat-content .steps {
+      margin: 20px 0;
+      text-align: left;
+      background: #f9fafb;
+      padding: 16px;
+      border-radius: 10px;
+      font-size: 14px;
+      line-height: 1.8;
+      color: #555;
+    }
+    .wechat-content button {
+      margin-top: 20px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: #fff;
+      border: none;
+      padding: 14px 28px;
+      border-radius: 10px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      width: 100%;
     }
   </style>
   <meta name="referrer" content="no-referrer">
@@ -122,8 +283,8 @@
   <div class="container">
     <div class="card">
       <h1>优质评价文案生成器</h1>
-      <div class="tips" style="margin-bottom: 20px;">
-        🤖 已内置 DeepSeek AI，智能生成真实评价 | 💡 每次风格随机，避免千篇一律
+      <div class="tips">
+        🤖 DeepSeek AI 智能生成 · 💡 每次风格随机 · 📱 支持美团/抖音跳转
       </div>
 
       <label>✂️ 类目（可多选）</label>
@@ -187,6 +348,44 @@
     const btnCopyGo = $("btnCopyGo");
     const result = $("result");
     const status = $("status");
+    
+    // 检测是否在微信浏览器中
+    function isWechat() {
+      const ua = navigator.userAgent.toLowerCase();
+      return ua.includes('micromessenger');
+    }
+    
+    // 显示微信引导遮罩
+    function showWechatGuide() {
+      const mask = document.createElement('div');
+      mask.className = 'wechat-mask show';
+      mask.innerHTML = `
+        <div class="wechat-arrow"></div>
+        <div class="wechat-content">
+          <div class="icon">📱</div>
+          <h2>请在浏览器中打开</h2>
+          <p>当前在微信中打开，无法调起美团/抖音APP</p>
+          <div class="steps">
+            <div>📍 操作步骤：</div>
+            <div style="margin-top: 8px;">
+              1️⃣ 点击右上角"<b>...</b>"<br>
+              2️⃣ 选择"<b>在浏览器中打开</b>"<br>
+              3️⃣ 然后即可正常使用所有功能
+            </div>
+          </div>
+          <button onclick="this.parentElement.parentElement.classList.remove('show')">我知道了</button>
+        </div>
+      `;
+      document.body.appendChild(mask);
+    }
+    
+    // 页面加载时检测
+    if (isWechat()) {
+      // 延迟显示，确保页面加载完成
+      window.addEventListener('DOMContentLoaded', () => {
+        setTimeout(showWechatGuide, 500);
+      });
+    }
     
     // 平台深度链接配置
     const DEEP_LINKS = {
@@ -289,7 +488,14 @@
       
       const randomTone = tones[Math.floor(Math.random() * tones.length)];
       
-      btnGen.disabled = true; btnGen.textContent = "生成中…"; status.textContent = "";
+      btnGen.disabled = true; btnGen.textContent = "生成中…"; status.textContent = "正在连接AI服务...";
+      
+      console.log('开始生成文案...');
+      console.log('类目:', category);
+      console.log('服务人员:', staff);
+      console.log('目标长度:', targetLength);
+      console.log('风格:', randomStyle);
+      
       try {
         const system = `你是一个真实的用户，正在给美发店写评价。请用自然、真实的语言，像普通消费者一样表达自己的使用感受。
 风格要求：${randomStyle}
@@ -310,6 +516,8 @@
 6. 每次生成要有不同的切入点和表达方式
 7. 可以从不同角度切入：效果、服务、环境、性价比、技术等`;
         
+        status.textContent = "AI正在生成评价...";
+        
         const raw = await callChatCompletions({ 
           apiBase: DEEPSEEK_CONFIG.apiBase, 
           apiKey: DEEPSEEK_CONFIG.apiKey, 
@@ -319,6 +527,9 @@
           temperature: 0.9,  // 提高温度增加随机性
           maxTokens: 500 
         });
+        
+        console.log('AI返回结果:', raw);
+        
         const text = cutToLength(raw, targetLength);
         result.style.display = "block";
         result.textContent = text;
@@ -326,7 +537,10 @@
         const actualLength = text.replace(/\s+/g, "").length;
         status.textContent = text ? `✅ 已生成真实评价，共${actualLength}字 | 风格：${randomStyle.split('：')[0]}` : "生成失败，请重试";
       } catch (e) {
-        status.textContent = "请求失败：" + (e && e.message ? e.message : e);
+        console.error('生成文案失败:', e);
+        result.style.display = "block";
+        result.textContent = `生成失败：${e.message}`;
+        status.textContent = "❌ 请求失败：" + (e && e.message ? e.message : e);
       } finally {
         btnGen.disabled = false; btnGen.textContent = "生成文案";
       }
@@ -408,6 +622,18 @@
       const platformName = platform === "meituan" ? "美团" : "抖音";
       
       if (ok) {
+        // 如果在微信中，提示用户
+        if (isWechat()) {
+          status.textContent = `✅ 文案已复制！\n\n由于微信限制，无法自动调起${platformName}APP\n\n请按以下步骤操作：\n1. 点击右上角"..."选择"在浏览器中打开"\n2. 或手动打开${platformName}APP\n3. 粘贴评价内容`;
+          
+          // 显示操作提示弹窗
+          setTimeout(() => {
+            alert(`✅ 文案已复制到剪贴板！\n\n由于微信限制，无法自动调起${platformName}APP\n\n请按以下步骤操作：\n\n1. 点击右上角"..." \n2. 选择"在浏览器中打开"\n3. 然后再次点击"复制并跳转"按钮\n\n或者：\n1. 手动打开${platformName}APP\n2. 找到店铺\n3. 粘贴评价内容`);
+          }, 500);
+          
+          return;
+        }
+        
         status.textContent = `文案已复制，正在打开${platformName}店铺…`;
         
         // 调起APP并跳转
@@ -424,15 +650,15 @@
             if (iframe.parentNode) {
               document.body.removeChild(iframe);
             }
-            status.textContent = `文案已复制，${platformName}APP已调起！\n\n请在APP中粘贴评价内容`;
+            status.textContent = `✅ 文案已复制，${platformName}APP已调起！\n\n请在APP中粘贴评价内容`;
           }, 2000);
           
         } catch (e) {
           console.log('调起APP失败:', e);
-          status.textContent = `文案已复制，但调起${platformName}APP失败\n\n请手动打开${platformName}APP`;
+          status.textContent = `✅ 文案已复制！\n\n请手动打开${platformName}APP并粘贴评价内容`;
         }
       } else {
-        status.textContent = "复制失败，请手动复制文案";
+        status.textContent = "❌ 复制失败，请手动复制文案";
       }
     }
     
