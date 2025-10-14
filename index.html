@@ -6,23 +6,115 @@
   <title>优质评价文案生成器</title>
   <style>
     :root { color-scheme: light dark; }
-    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif; margin: 0; padding: 0; background: #f6f8fa; }
+    body { 
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif; 
+      margin: 0; 
+      padding: 0; 
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+    }
     .container { max-width: 720px; margin: 0 auto; padding: 24px 16px 48px; }
-    .card { background: #fff; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.08); padding: 20px; }
-    h1 { font-size: 20px; margin: 0 0 16px; }
-    label { display: block; font-size: 14px; color: #555; margin: 12px 0 6px; }
-    input[type="text"], textarea, select { width: 100%; box-sizing: border-box; padding: 10px 12px; border-radius: 8px; border: 1px solid #d0d7de; outline: none; font-size: 14px; background: #fff; }
-    textarea { min-height: 96px; resize: vertical; }
-    .row { display: flex; gap: 12px; align-items: center; }
-    .row > * { flex: 1; }
-    .actions { display: flex; gap: 12px; margin-top: 16px; }
-    button { cursor: pointer; border: none; padding: 10px 14px; border-radius: 8px; font-size: 14px; }
-    .btn-primary { background: #1677ff; color: #fff; }
-    .btn-secondary { background: #eef2ff; color: #1f2937; }
-    .result { margin-top: 16px; padding: 12px; background: #f8fafc; border: 1px solid #e5e7eb; border-radius: 8px; white-space: pre-wrap; word-break: break-word; font-size: 14px; }
-    .tips { color: #6b7280; font-size: 12px; margin-top: 6px; }
-    .muted { color: #64748b; font-size: 12px; }
-    .footer { text-align: center; color: #94a3b8; font-size: 12px; margin-top: 16px; }
+    .card { 
+      background: #fff; 
+      border-radius: 16px; 
+      box-shadow: 0 8px 32px rgba(0,0,0,0.12); 
+      padding: 28px; 
+      backdrop-filter: blur(10px);
+    }
+    h1 { 
+      font-size: 28px; 
+      margin: 0 0 8px; 
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      font-weight: 700;
+    }
+    label { display: block; font-size: 14px; color: #555; margin: 16px 0 8px; font-weight: 500; }
+    input[type="checkbox"] { cursor: pointer; }
+    select { 
+      width: 100%; 
+      box-sizing: border-box; 
+      padding: 12px 14px; 
+      border-radius: 10px; 
+      border: 2px solid #e5e7eb; 
+      outline: none; 
+      font-size: 14px; 
+      background: #fff;
+      transition: border-color 0.3s;
+    }
+    select:focus { border-color: #667eea; }
+    .actions { display: flex; gap: 12px; margin-top: 20px; flex-wrap: wrap; }
+    button { 
+      cursor: pointer; 
+      border: none; 
+      padding: 12px 20px; 
+      border-radius: 10px; 
+      font-size: 15px; 
+      font-weight: 500;
+      transition: all 0.3s;
+      flex: 1;
+      min-width: 140px;
+    }
+    button:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
+    button:active { transform: translateY(0); }
+    .btn-primary { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: #fff; }
+    .btn-secondary { background: #f3f4f6; color: #374151; border: 2px solid #e5e7eb; }
+    .btn-secondary:disabled { opacity: 0.5; cursor: not-allowed; }
+    .result { 
+      margin-top: 20px; 
+      padding: 16px; 
+      background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%); 
+      border: 2px solid #fbbf24; 
+      border-radius: 12px; 
+      white-space: pre-wrap; 
+      word-break: break-word; 
+      font-size: 15px; 
+      line-height: 1.8;
+      box-shadow: 0 4px 12px rgba(251,191,36,0.2);
+    }
+    .tips { 
+      color: #6b7280; 
+      font-size: 13px; 
+      margin-top: 6px; 
+      padding: 12px; 
+      background: #f9fafb; 
+      border-radius: 8px;
+      border-left: 3px solid #667eea;
+    }
+    .muted { color: #64748b; font-size: 13px; margin-top: 12px; }
+    .footer { 
+      text-align: center; 
+      color: #fff; 
+      font-size: 13px; 
+      margin-top: 20px; 
+      opacity: 0.9;
+    }
+    .checkbox-group {
+      display: flex; 
+      flex-wrap: wrap; 
+      gap: 10px; 
+      margin: 8px 0;
+    }
+    .checkbox-label {
+      display: flex; 
+      align-items: center; 
+      gap: 6px; 
+      font-size: 14px; 
+      color: #555; 
+      cursor: pointer;
+      padding: 6px 12px;
+      background: #f9fafb;
+      border-radius: 8px;
+      transition: all 0.3s;
+    }
+    .checkbox-label:hover {
+      background: #e5e7eb;
+    }
+    .checkbox-label input:checked + span {
+      color: #667eea;
+      font-weight: 600;
+    }
   </style>
   <meta name="referrer" content="no-referrer">
 </head>
@@ -30,52 +122,52 @@
   <div class="container">
     <div class="card">
       <h1>优质评价文案生成器</h1>
-      <div class="tips" style="margin-bottom: 16px; padding: 8px; background: #f0f9ff; border: 1px solid #bae6fd; border-radius: 6px;">
-        🔥 已内置 DeepSeek AI，无需配置，直接使用！
+      <div class="tips" style="margin-bottom: 20px;">
+        🤖 已内置 DeepSeek AI，智能生成真实评价 | 💡 每次风格随机，避免千篇一律
       </div>
 
-      <label>类目（可多选）</label>
-      <div style="display: flex; flex-wrap: wrap; gap: 8px; margin: 8px 0;">
-        <label style="display: flex; align-items: center; gap: 4px; font-size: 14px; color: #555; cursor: pointer;">
-          <input type="checkbox" value="剪发" style="margin: 0;"> 剪发
+      <label>✂️ 类目（可多选）</label>
+      <div class="checkbox-group">
+        <label class="checkbox-label">
+          <input type="checkbox" value="剪发" style="margin: 0;"><span>剪发</span>
         </label>
-        <label style="display: flex; align-items: center; gap: 4px; font-size: 14px; color: #555; cursor: pointer;">
-          <input type="checkbox" value="烫发" style="margin: 0;"> 烫发
+        <label class="checkbox-label">
+          <input type="checkbox" value="烫发" style="margin: 0;"><span>烫发</span>
         </label>
-        <label style="display: flex; align-items: center; gap: 4px; font-size: 14px; color: #555; cursor: pointer;">
-          <input type="checkbox" value="染发" style="margin: 0;"> 染发
+        <label class="checkbox-label">
+          <input type="checkbox" value="染发" style="margin: 0;"><span>染发</span>
         </label>
-        <label style="display: flex; align-items: center; gap: 4px; font-size: 14px; color: #555; cursor: pointer;">
-          <input type="checkbox" value="护理" style="margin: 0;"> 护理
+        <label class="checkbox-label">
+          <input type="checkbox" value="护理" style="margin: 0;"><span>护理</span>
         </label>
-        <label style="display: flex; align-items: center; gap: 4px; font-size: 14px; color: #555; cursor: pointer;">
-          <input type="checkbox" value="造型" style="margin: 0;"> 造型
-        </label>
-      </div>
-
-      <label>服务人员（可多选）</label>
-      <div style="display: flex; flex-wrap: wrap; gap: 8px; margin: 8px 0;">
-        <label style="display: flex; align-items: center; gap: 4px; font-size: 14px; color: #555; cursor: pointer;">
-          <input type="checkbox" value="薇薇老师" style="margin: 0;"> 薇薇老师
-        </label>
-        <label style="display: flex; align-items: center; gap: 4px; font-size: 14px; color: #555; cursor: pointer;">
-          <input type="checkbox" value="赵老师" style="margin: 0;"> 赵老师
-        </label>
-        <label style="display: flex; align-items: center; gap: 4px; font-size: 14px; color: #555; cursor: pointer;">
-          <input type="checkbox" value="李老师" style="margin: 0;"> 李老师
-        </label>
-        <label style="display: flex; align-items: center; gap: 4px; font-size: 14px; color: #555; cursor: pointer;">
-          <input type="checkbox" value="洋子老师" style="margin: 0;"> 洋子老师
-        </label>
-        <label style="display: flex; align-items: center; gap: 4px; font-size: 14px; color: #555; cursor: pointer;">
-          <input type="checkbox" value="小杰" style="margin: 0;"> 小杰
+        <label class="checkbox-label">
+          <input type="checkbox" value="造型" style="margin: 0;"><span>造型</span>
         </label>
       </div>
 
-      <label for="shopPlatform">选择平台</label>
+      <label>👤 服务人员（可多选）</label>
+      <div class="checkbox-group">
+        <label class="checkbox-label">
+          <input type="checkbox" value="薇薇老师" style="margin: 0;"><span>薇薇老师</span>
+        </label>
+        <label class="checkbox-label">
+          <input type="checkbox" value="赵老师" style="margin: 0;"><span>赵老师</span>
+        </label>
+        <label class="checkbox-label">
+          <input type="checkbox" value="李老师" style="margin: 0;"><span>李老师</span>
+        </label>
+        <label class="checkbox-label">
+          <input type="checkbox" value="洋子老师" style="margin: 0;"><span>洋子老师</span>
+        </label>
+        <label class="checkbox-label">
+          <input type="checkbox" value="小杰" style="margin: 0;"><span>小杰</span>
+        </label>
+      </div>
+
+      <label for="shopPlatform">🏪 选择平台</label>
       <select id="shopPlatform">
-        <option value="meituan">美团店铺</option>
-        <option value="douyin">抖音店铺</option>
+        <option value="meituan">🍜 美团店铺</option>
+        <option value="douyin">🎵 抖音店铺</option>
       </select>
 
       <div class="actions">
@@ -160,9 +252,6 @@
     }
 
     async function generate() {
-      // 使用默认提示词，因为输入框已隐藏
-      const prompt = "技术专业、服务贴心、环境舒适、价格合理、效果满意，适合各种发质和脸型";
-      
       // 获取选中的类目
       const checkedCategories = Array.from(document.querySelectorAll('input[type="checkbox"]:checked'))
         .map(cb => cb.value);
@@ -177,29 +266,65 @@
       // 内置100-240字随机
       const targetLength = Math.floor(Math.random() * 141) + 100; // 100-240随机
       
+      // 多样化的评价风格
+      const styles = [
+        "简洁直接型：语言简练，重点突出，直接表达满意度",
+        "细节描述型：注重细节描写，包含具体的服务过程和感受",
+        "对比感受型：对比之前的体验，突出这次的改变和效果",
+        "朋友推荐型：像向朋友推荐一样，自然随意的语气",
+        "专业点评型：略带专业角度，点评技术和效果",
+        "故事叙述型：用叙述的方式讲述体验过程"
+      ];
+      
+      const randomStyle = styles[Math.floor(Math.random() * styles.length)];
+      
+      // 多样化的语气词
+      const tones = [
+        "轻松愉快",
+        "真诚实在",
+        "平和自然",
+        "热情洋溢",
+        "沉稳踏实"
+      ];
+      
+      const randomTone = tones[Math.floor(Math.random() * tones.length)];
+      
       btnGen.disabled = true; btnGen.textContent = "生成中…"; status.textContent = "";
       try {
-        const system = "你是一个真实的用户，正在给美发店写评价。请用自然、真实的语言，像普通消费者一样表达自己的使用感受。避免官方话术、营销词汇，要像朋友聊天一样自然。可以包含个人体验细节、对比感受、使用场景等真实内容。";
+        const system = `你是一个真实的用户，正在给美发店写评价。请用自然、真实的语言，像普通消费者一样表达自己的使用感受。
+风格要求：${randomStyle}
+语气要求：${randomTone}
+避免官方话术、营销词汇，要像朋友聊天一样自然。可以包含个人体验细节、对比感受、使用场景等真实内容。
+每次生成的评价要有不同的表达方式和侧重点，避免千篇一律。`;
+        
         let userMsg = `请帮我写一个关于${category}的真实用户评价，大约${targetLength}字左右。`;
         if (staff) {
           userMsg += `服务人员是${staff}。`;
         }
-        userMsg += `基于以下要点：${prompt}\n\n要求：1.语言自然真实，像真人写的 2.避免"非常好"、"强烈推荐"等套话 3.可以包含具体的使用细节和服务人员 4.字数控制在${targetLength}字左右 5.不要加引号或表情符号`;
+        userMsg += `\n\n要求：
+1. 语言自然真实，像真人写的，符合"${randomStyle}"的特点
+2. 避免"非常好"、"强烈推荐"等套话
+3. 可以包含具体的使用细节和服务人员
+4. 字数控制在${targetLength}字左右
+5. 不要加引号或表情符号
+6. 每次生成要有不同的切入点和表达方式
+7. 可以从不同角度切入：效果、服务、环境、性价比、技术等`;
+        
         const raw = await callChatCompletions({ 
           apiBase: DEEPSEEK_CONFIG.apiBase, 
           apiKey: DEEPSEEK_CONFIG.apiKey, 
           model: DEEPSEEK_CONFIG.model, 
           system, 
           user: userMsg, 
-          temperature: 0.8, 
-          maxTokens: 400 
+          temperature: 0.9,  // 提高温度增加随机性
+          maxTokens: 500 
         });
         const text = cutToLength(raw, targetLength);
         result.style.display = "block";
         result.textContent = text;
         btnCopyGo.disabled = !text;
         const actualLength = text.replace(/\s+/g, "").length;
-        status.textContent = text ? `已生成真实评价，共${actualLength}字` : "生成失败，请重试";
+        status.textContent = text ? `✅ 已生成真实评价，共${actualLength}字 | 风格：${randomStyle.split('：')[0]}` : "生成失败，请重试";
       } catch (e) {
         status.textContent = "请求失败：" + (e && e.message ? e.message : e);
       } finally {
@@ -222,7 +347,7 @@
       document.body.removeChild(ta);
       return ok;
     }
-    
+
     // 跳转到店铺
     function jumpToShop() {
       const platform = $("shopPlatform").value;
@@ -256,7 +381,7 @@
         document.addEventListener('visibilitychange', handleVisibilityChange);
         
         // 3秒后检测
-        setTimeout(() => {
+            setTimeout(() => {
           if (iframe.parentNode) {
             document.body.removeChild(iframe);
           }
