@@ -517,16 +517,39 @@
     // 平台深度链接配置
     const DEEP_LINKS = {
       meituan: "imeituan://www.meituan.com/food/poi/detail?id=1033453100",  // 美团店铺深度链接
-      dianping: "dianping://shopinfo?shopuuid=k6JZYlytyJ0q9Mz",  // 大众点评店铺深度链接
+      dianping: "dianping://shopinfo?shopId=k6JZYlytyJ0q9Mz",  // 大众点评店铺深度链接（使用shopId参数）
       douyin: "snssdk1128://poi/detail/?id=7375105554814863423"  // 抖音店铺深度链接
     };
     
-    // 美团店铺信息
-    const MEITUAN_SHOP_INFO = {
+    // 大众点评备用链接（如果第一个不行，可以尝试这些格式）
+    const DIANPING_BACKUP_LINKS = [
+      "dianping://shopinfo?shopId=k6JZYlytyJ0q9Mz",
+      "dianping://web?url=https://www.dianping.com/shop/k6JZYlytyJ0q9Mz",
+      "dianping://shopdetail?shopId=k6JZYlytyJ0q9Mz"
+    ];
+    
+    // 店铺信息配置
+    const SHOP_INFO = {
       name: "李小寻造型（际华广场店）",
       address: "雁塔区昆明池路金辉悦府小北门门口",
       phone: "17602910667",
-      url: "http://dpurl.cn/ipWBl40z"
+      meituan: {
+        url: "http://dpurl.cn/ipWBl40z"  // 美团网页版链接
+      },
+      dianping: {
+        url: "https://www.dianping.com/shop/k6JZYlytyJ0q9Mz"  // 大众点评网页版链接（请替换为实际链接）
+      },
+      douyin: {
+        url: ""  // 抖音网页版链接（如有）
+      }
+    };
+    
+    // 兼容旧代码
+    const MEITUAN_SHOP_INFO = {
+      name: SHOP_INFO.name,
+      address: SHOP_INFO.address,
+      phone: SHOP_INFO.phone,
+      url: SHOP_INFO.meituan.url
     };
     
     // 美团APP深度链接配置
@@ -940,7 +963,12 @@ ${randomPerspective}
       const shopDetails = `店铺名称：${shopInfo.name}\n店铺地址：${shopInfo.address}\n联系电话：${shopInfo.phone}`;
       
       const deepLink = DEEP_LINKS[platform];
-      const platformName = platform === "meituan" ? "美团" : "抖音";
+      const platformNames = {
+        meituan: "美团",
+        dianping: "大众点评",
+        douyin: "抖音"
+      };
+      const platformName = platformNames[platform] || platform;
       
       console.log(`跳转到${platformName}店铺`);
       status.textContent = `正在调起${platformName}APP...\n\n${shopDetails}\n\n深度链接: ${deepLink}`;
@@ -965,15 +993,24 @@ ${randomPerspective}
         
         document.addEventListener('visibilitychange', handleVisibilityChange);
         
-        // 3秒后检测
-            setTimeout(() => {
+        // 3秒后检测，如果失败则尝试打开网页版
+        setTimeout(() => {
           if (iframe.parentNode) {
             document.body.removeChild(iframe);
           }
           document.removeEventListener('visibilitychange', handleVisibilityChange);
           
           if (!appOpened) {
-            status.textContent = `❌ 调起${platformName}APP失败\n\n${shopDetails}\n\n深度链接: ${deepLink}\n\n请确保已安装${platformName}APP`;
+            // 如果深度链接失败，尝试打开网页版（网页版会自动提示打开APP）
+            const webUrl = SHOP_INFO[platform]?.url;
+            if (webUrl) {
+              status.textContent = `⚠️ 深度链接调起失败，正在跳转到${platformName}网页版...\n\n${shopDetails}\n\n网页版会自动提示打开APP`;
+              setTimeout(() => {
+                window.location.href = webUrl;
+              }, 500);
+            } else {
+              status.textContent = `❌ 调起${platformName}APP失败\n\n${shopDetails}\n\n深度链接: ${deepLink}\n\n请确保已安装${platformName}APP`;
+            }
           }
         }, 3000);
         
