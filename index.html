@@ -13,7 +13,7 @@
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif; 
       margin: 0; 
       padding: 0; 
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #d946ef 100%);
       background-attachment: fixed;
       min-height: 100vh;
       -webkit-font-smoothing: antialiased;
@@ -24,16 +24,20 @@
       content: '';
       position: fixed;
       top: -50%;
-      right: -50%;
+      left: -50%;
       width: 200%;
       height: 200%;
-      background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
-      animation: rotate 20s linear infinite;
+      background: 
+        radial-gradient(circle at 20% 50%, rgba(99, 102, 241, 0.3) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(139, 92, 246, 0.3) 0%, transparent 50%),
+        radial-gradient(circle at 40% 20%, rgba(217, 70, 239, 0.2) 0%, transparent 50%);
+      animation: float 15s ease-in-out infinite;
       pointer-events: none;
     }
-    @keyframes rotate {
-      from { transform: rotate(0deg); }
-      to { transform: rotate(360deg); }
+    @keyframes float {
+      0%, 100% { transform: translate(0, 0) rotate(0deg); }
+      33% { transform: translate(30px, -30px) rotate(120deg); }
+      66% { transform: translate(-20px, 20px) rotate(240deg); }
     }
     .container { 
       max-width: 640px; 
@@ -41,23 +45,52 @@
       padding: 12px 12px 24px; 
     }
     .card { 
-      background: rgba(255, 255, 255, 0.98); 
-      border-radius: 20px; 
-      box-shadow: 0 8px 32px rgba(0,0,0,0.2), 0 0 0 1px rgba(255,255,255,0.5) inset; 
-      padding: 16px; 
-      backdrop-filter: blur(10px);
+      background: rgba(255, 255, 255, 0.95); 
+      border-radius: 24px; 
+      box-shadow: 
+        0 20px 60px rgba(0,0,0,0.3),
+        0 0 0 1px rgba(255,255,255,0.8) inset,
+        0 0 100px rgba(139, 92, 246, 0.1); 
+      padding: 20px; 
+      backdrop-filter: blur(20px);
       position: relative;
       z-index: 1;
     }
+    .card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      border-radius: 24px;
+      padding: 2px;
+      background: linear-gradient(135deg, rgba(99, 102, 241, 0.5), rgba(217, 70, 239, 0.5));
+      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      opacity: 0.6;
+      pointer-events: none;
+    }
     h1 { 
-      font-size: 20px; 
-      margin: 0 0 12px; 
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      font-size: 26px; 
+      margin: 0 0 6px; 
+      background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #d946ef 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
-      font-weight: 700;
+      font-weight: 800;
       text-align: center;
+      letter-spacing: 0.5px;
+    }
+    h1::after {
+      content: '';
+      display: block;
+      width: 60px;
+      height: 4px;
+      background: linear-gradient(90deg, #6366f1, #d946ef);
+      margin: 8px auto 0;
+      border-radius: 2px;
     }
     label { 
       display: block; 
@@ -70,27 +103,33 @@
     /* 修复微信浏览器下拉框样式问题 */
     select { 
       width: 100%; 
-      padding: 12px 14px; 
-      border-radius: 10px; 
+      padding: 14px 16px; 
+      border-radius: 12px; 
       border: 2px solid #e5e7eb; 
       outline: none; 
       font-size: 15px;
       background: #fff;
       color: #333;
-      font-weight: 500;
+      font-weight: 600;
       -webkit-appearance: none;
       -moz-appearance: none;
       appearance: none;
-      background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+      background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%238b5cf6' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
       background-repeat: no-repeat;
-      background-position: right 12px center;
-      background-size: 18px;
-      padding-right: 40px;
+      background-position: right 14px center;
+      background-size: 20px;
+      padding-right: 44px;
       cursor: pointer;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+      transition: all 0.3s;
+    }
+    select:hover {
+      border-color: #c7d2fe;
+      box-shadow: 0 4px 12px rgba(99, 102, 241, 0.15);
     }
     select:focus { 
-      border-color: #667eea; 
-      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+      border-color: #8b5cf6; 
+      box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.15), 0 4px 12px rgba(139, 92, 246, 0.2);
     }
     select option {
       padding: 10px;
@@ -121,11 +160,15 @@
       opacity: 0.9;
     }
     .btn-primary { 
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
+      background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #d946ef 100%); 
       color: #fff;
-      box-shadow: 0 4px 16px rgba(102, 126, 234, 0.4);
+      box-shadow: 
+        0 8px 24px rgba(139, 92, 246, 0.5),
+        0 0 40px rgba(217, 70, 239, 0.2);
       position: relative;
       overflow: hidden;
+      font-weight: 700;
+      letter-spacing: 0.5px;
     }
     .btn-primary::before {
       content: '';
@@ -135,24 +178,46 @@
       width: 0;
       height: 0;
       border-radius: 50%;
-      background: rgba(255,255,255,0.3);
+      background: rgba(255,255,255,0.4);
       transform: translate(-50%, -50%);
-      transition: width 0.6s, height 0.6s;
+      transition: width 0.5s, height 0.5s;
     }
     .btn-primary:active::before {
-      width: 300px;
-      height: 300px;
+      width: 400px;
+      height: 400px;
+    }
+    .btn-primary::after {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: linear-gradient(45deg, transparent 30%, rgba(255,255,255,0.2) 50%, transparent 70%);
+      animation: shimmer 3s infinite;
+    }
+    @keyframes shimmer {
+      0% { transform: translateX(-100%); }
+      100% { transform: translateX(100%); }
     }
     .btn-secondary { 
-      background: linear-gradient(135deg, #f9fafb 0%, #f3f4f6 100%); 
-      color: #374151; 
-      border: 2px solid #e5e7eb; 
-      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      background: #fff; 
+      color: #6366f1; 
+      border: 2px solid #c7d2fe; 
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+      font-weight: 600;
+    }
+    .btn-secondary:not(:disabled):hover {
+      border-color: #8b5cf6;
+      box-shadow: 0 6px 16px rgba(139, 92, 246, 0.2);
     }
     .btn-secondary:disabled { 
-      opacity: 0.4; 
+      opacity: 0.5; 
       cursor: not-allowed; 
       box-shadow: none;
+      background: #f3f4f6;
+      color: #9ca3af;
+      border-color: #e5e7eb;
     }
     .result { 
       margin-top: 12px; 
@@ -205,16 +270,20 @@
       color: #555; 
       cursor: pointer;
       padding: 10px 16px;
-      background: linear-gradient(135deg, #f9fafb 0%, #f3f4f6 100%);
-      border-radius: 20px;
-      transition: all 0.2s;
-      border: 2px solid transparent;
+      background: #fff;
+      border-radius: 12px;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      border: 2px solid #e5e7eb;
       user-select: none;
       -webkit-user-select: none;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    }
+    .checkbox-label:hover {
+      border-color: #c7d2fe;
+      box-shadow: 0 4px 12px rgba(99, 102, 241, 0.15);
     }
     .checkbox-label:active {
-      transform: scale(0.95);
+      transform: scale(0.96);
     }
     .checkbox-label input {
       margin: 0;
@@ -223,17 +292,20 @@
       cursor: pointer;
     }
     .checkbox-label input:checked {
-      accent-color: #667eea;
+      accent-color: #8b5cf6;
     }
     .checkbox-label:has(input:checked) {
-      background: linear-gradient(135deg, #eef2ff 0%, #e0e7ff 100%);
-      border-color: #667eea;
-      box-shadow: 0 4px 8px rgba(102, 126, 234, 0.2);
-      transform: translateY(-1px);
+      background: linear-gradient(135deg, #f5f3ff 0%, #ede9fe 100%);
+      border-color: #8b5cf6;
+      box-shadow: 0 6px 16px rgba(139, 92, 246, 0.3), 0 0 20px rgba(139, 92, 246, 0.1);
+      transform: translateY(-2px);
     }
     .checkbox-label:has(input:checked) span {
-      color: #667eea;
-      font-weight: 600;
+      background: linear-gradient(135deg, #8b5cf6 0%, #d946ef 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      font-weight: 700;
     }
     
     /* 移动端优化 */
@@ -358,7 +430,7 @@
 
       <div style="display: flex; gap: 12px; margin: 12px 0;">
         <div style="flex: 1;">
-          <label style="margin: 0 0 8px;">👤 服务人员</label>
+          <label style="margin: 0 0 8px;">👤 服务人员 <span style="color: #999; font-size: 12px; font-weight: 400;">(可选)</span></label>
           <div class="checkbox-group" style="gap: 6px;">
             <label class="checkbox-label" style="padding: 6px 10px; font-size: 13px;">
               <input type="checkbox" value="薇薇老师"><span>薇薇老师</span>
@@ -382,6 +454,7 @@
       <label for="shopPlatform" style="margin: 12px 0 8px;">🏪 平台</label>
       <select id="shopPlatform">
         <option value="meituan">💇 美团美发</option>
+        <option value="dianping">⭐ 大众点评</option>
         <option value="douyin">🎵 抖音</option>
       </select>
 
@@ -444,6 +517,7 @@
     // 平台深度链接配置
     const DEEP_LINKS = {
       meituan: "imeituan://www.meituan.com/food/poi/detail?id=1033453100",  // 美团店铺深度链接
+      dianping: "dianping://shopinfo?shopuuid=k6JZYlytyJ0q9Mz",  // 大众点评店铺深度链接
       douyin: "snssdk1128://poi/detail/?id=7375105554814863423"  // 抖音店铺深度链接
     };
     
@@ -519,28 +593,235 @@
       // 内置100-240字随机
       const targetLength = Math.floor(Math.random() * 141) + 100; // 100-240随机
       
-      // 多样化的评价风格
+      // 30+种真实评价风格
       const styles = [
-        "简洁直接型：语言简练，重点突出，直接表达满意度",
-        "细节描述型：注重细节描写，包含具体的服务过程和感受",
-        "对比感受型：对比之前的体验，突出这次的改变和效果",
-        "朋友推荐型：像向朋友推荐一样，自然随意的语气",
-        "专业点评型：略带专业角度，点评技术和效果",
-        "故事叙述型：用叙述的方式讲述体验过程"
+        "简短直白型：像发朋友圈，三言两语说重点",
+        "细节体验型：描述具体的服务细节和感受",
+        "对比惊喜型：对比之前经历，这次更好",
+        "闲聊推荐型：像跟朋友聊天一样自然",
+        "感性表达型：从个人心情和变化出发",
+        "实用主义型：重点说效果和体验",
+        "首次尝试型：第一次来的新鲜感受",
+        "老顾客型：来过几次，分享熟悉的感觉",
+        "意外惊喜型：本没抱太大希望，结果很好",
+        "朋友陪同型：跟朋友一起来的轻松氛围",
+        "随性自然型：路过进来看看的随意",
+        "团购满意型：团购来的，感觉很值",
+        "二次光顾型：上次满意所以又来了",
+        "谨慎选择型：精挑细选后的满意",
+        "平和记录型：平淡但真实的满意体验",
+        "快节奏型：说话直接简单明了",
+        "慢节奏型：悠闲舒适的享受过程",
+        "理性评估型：客观理性地分享体验",
+        "热情分享型：开心地分享好体验",
+        "低调满意型：不夸张地表达满意",
+        "惊艳推荐型：真的很惊艳想推荐",
+        "舒适享受型：强调舒适放松的感觉",
+        "技术认可型：认可技术和手法",
+        "服务赞赏型：服务让人舒心",
+        "环境喜爱型：喜欢店里的氛围",
+        "效果满意型：对最终效果很满意",
+        "物有所值型：觉得花的钱值",
+        "便利好评型：位置方便服务便利",
+        "温馨感受型：感受到温馨和贴心",
+        "专业认同型：认同专业度和水平",
+        "贴心服务型：细节处的贴心服务",
+        "愉快体验型：整个过程很愉快"
       ];
       
       const randomStyle = styles[Math.floor(Math.random() * styles.length)];
       
-      // 多样化的语气词
-      const tones = [
-        "轻松愉快",
-        "真诚实在",
-        "平和自然",
-        "热情洋溢",
-        "沉稳踏实"
+      // 30+种表达角度
+      const perspectives = [
+        "从发型效果入手",
+        "从服务态度入手",
+        "从环境氛围入手",
+        "从性价比入手",
+        "从技术手法入手",
+        "从整体体验入手",
+        "从个人变化入手",
+        "从预约流程入手",
+        "从沟通过程入手",
+        "从产品使用入手",
+        "从店铺位置入手",
+        "从装修风格入手",
+        "从音乐氛围入手",
+        "从卫生清洁入手",
+        "从朋友推荐入手",
+        "从偶然发现入手",
+        "从老顾客角度入手",
+        "从专业程度入手",
+        "从细心程度入手",
+        "从耐心程度入手",
+        "从创意设计入手",
+        "从实际需求入手",
+        "从第一印象入手",
+        "从最终成果入手",
+        "从舒适度入手",
+        "从方便程度入手",
+        "从惊喜感入手",
+        "从放松感入手",
+        "从信任感入手",
+        "从满意度入手",
+        "从变美效果入手",
+        "从心情变化入手"
       ];
       
-      const randomTone = tones[Math.floor(Math.random() * tones.length)];
+      const randomPerspective = perspectives[Math.floor(Math.random() * perspectives.length)];
+      
+      // 30+种开头方式
+      const openings = [
+        "今天来",
+        "周末过来",
+        "朋友推荐来的",
+        "第一次来",
+        "又来了",
+        "团购过来的",
+        "路过进来看看",
+        "昨天预约的",
+        "下班过来",
+        "逛街路过",
+        "看评价不错来的",
+        "之前来过",
+        "听同事说",
+        "在网上看到",
+        "附近找了家",
+        "早就想来",
+        "终于有时间",
+        "趁着有活动",
+        "正好有空",
+        "专门过来",
+        "顺路过来",
+        "约了朋友",
+        "一直想换发型",
+        "闺蜜推荐",
+        "下午来",
+        "上午过来",
+        "中午来",
+        "晚上来",
+        "放假来",
+        "周中来",
+        "提前预约了",
+        "临时决定",
+        "早就关注了",
+        "等了好久"
+      ];
+      const randomOpening = openings[Math.floor(Math.random() * openings.length)];
+      
+      // 40+种真实细节（全部正面）
+      const aspects = [
+        "可以提到预约很方便",
+        "可以提到价格挺合理",
+        "可以提到位置好找",
+        "可以提到停车方便",
+        "可以提到环境舒适",
+        "可以提到音乐好听",
+        "可以提到装修有品位",
+        "可以提到产品味道好闻",
+        "可以提到洗发水质量好",
+        "可以提到按摩手法舒服",
+        "可以提到人流适中",
+        "可以提到不会推销",
+        "可以提到茶水饮品贴心",
+        "可以提到卫生干净",
+        "可以提到空调温度舒适",
+        "可以提到光线柔和",
+        "可以提到镜子清晰",
+        "可以提到座椅舒适",
+        "可以提到工具干净",
+        "可以提到沟通顺畅",
+        "可以提到建议专业",
+        "可以提到时间把控好",
+        "可以提到细节到位",
+        "可以提到收尾仔细",
+        "可以提到打理建议实用",
+        "可以提到后续护理指导",
+        "可以提到还会再来",
+        "可以提到交通便利",
+        "可以提到周边配套好",
+        "可以提到营业时间合适",
+        "可以提到会员优惠实在",
+        "可以提到活动给力",
+        "可以提到支付方便",
+        "可以提到员工热情",
+        "可以提到建议中肯",
+        "可以提到个性化服务好",
+        "可以提到氛围轻松",
+        "可以提到服务周到",
+        "可以提到效率高",
+        "可以提到态度好"
+      ];
+      const randomAspect = aspects[Math.floor(Math.random() * aspects.length)];
+      
+      // 30+种句式结构
+      const structures = [
+        "多用短句，简洁明快",
+        "长短句结合，有节奏感",
+        "多用口语化转折词",
+        "采用总分总结构",
+        "采用流水账式叙述",
+        "采用对话式表达",
+        "采用感叹式语气",
+        "采用疑问式引入",
+        "先说过程后说效果",
+        "先说效果再说感受",
+        "时间顺序叙述",
+        "空间顺序描述",
+        "重点突出式",
+        "对比式表达",
+        "递进式叙述",
+        "并列式描述",
+        "举例说明式",
+        "总结归纳式",
+        "感受分享式",
+        "体验记录式",
+        "印象描述式",
+        "变化对比式",
+        "细节展开式",
+        "氛围渲染式",
+        "效果展示式",
+        "过程回顾式",
+        "心情表达式",
+        "轻松聊天式",
+        "随意分享式",
+        "真诚推荐式"
+      ];
+      const randomStructure = structures[Math.floor(Math.random() * structures.length)];
+      
+      // 30+种真实用词组合
+      const vocabularies = [
+        "挺、还行、不错、可以、蛮好",
+        "感觉、觉得、发现、看着、显得",
+        "就是、不过、反正、总之、而且、所以",
+        "确实、真的、说实话、老实说、实话说",
+        "比较、算是、应该、大概、差不多、基本",
+        "还好、还可以、还不赖、还挺好",
+        "挺满意、挺好的、挺舒服、挺快的",
+        "蛮喜欢、蛮好、蛮舒服、蛮专业的",
+        "很满意、很舒服、很喜欢、很好",
+        "相当不错、相当满意、相当舒服",
+        "超级好、超满意、超喜欢",
+        "特别好、特别满意、特别舒服",
+        "真心不错、真心满意、真心推荐",
+        "看着不错、看着挺好、看着满意",
+        "听着舒服、闻着好闻、摸着顺滑",
+        "做得好、剪得好、烫得好、染得好",
+        "弄得不错、搞得挺好、整得满意",
+        "效果好、手法好、技术好、态度好",
+        "挺靠谱、挺专业、挺细心、挺耐心",
+        "蛮认真、蛮仔细、蛮用心、蛮负责",
+        "很认真、很仔细、很用心、很负责",
+        "比想象中好、比预期好、比之前好",
+        "越来越好、一如既往好、始终如一",
+        "没让失望、没白来、值得来",
+        "来对了、选对了、找对了",
+        "还会来、会再来、继续光顾",
+        "值得推荐、可以推荐、推荐给朋友",
+        "放心、安心、舒心、省心",
+        "满意、开心、高兴、愉快",
+        "喜欢、钟意、中意、合适"
+      ];
+      const randomVocabulary = vocabularies[Math.floor(Math.random() * vocabularies.length)];
       
       btnGen.disabled = true; btnGen.textContent = "生成中…"; status.textContent = "正在连接AI服务...";
       
@@ -549,26 +830,62 @@
       console.log('服务人员:', staff);
       console.log('目标长度:', targetLength);
       console.log('风格:', randomStyle);
+      console.log('切入点:', randomPerspective);
       
       try {
-        const system = `你是一个真实的用户，正在给美发店写评价。请用自然、真实的语言，像普通消费者一样表达自己的使用感受。
-风格要求：${randomStyle}
-语气要求：${randomTone}
-避免官方话术、营销词汇，要像朋友聊天一样自然。可以包含个人体验细节、对比感受、使用场景等真实内容。
-每次生成的评价要有不同的表达方式和侧重点，避免千篇一律。`;
+        const system = `你是一个真实的普通顾客，刚做完美发，正在手机上写好评。
+
+【绝对禁止的官方套话】
+禁用：非常好、强烈推荐、五星好评、值得信赖、专业团队、技术精湛、服务周到、环境优雅、性价比超高、物超所值
+
+【必须使用的口语表达】
+多用：${randomVocabulary}
+
+【写作要求】
+1. 像跟朋友微信聊天一样自然随意
+2. ${randomStructure}
+3. 全部都是正面好评，但用口语化表达
+4. 就像真人在手机上随手打字
+5. 自然真实，不刻意堆砌
+
+【风格定位】
+${randomStyle}
+
+【切入角度】  
+${randomPerspective}
+
+【真实用户常见表达（好评版）】
+- "今天剪了个头发，挺满意的"
+- "老师手艺确实不错"
+- "环境还挺干净舒服的"
+- "这个价格还算可以"
+- "等了会儿，效果出来还挺好"
+- "挺满意的，感觉还会来"
+- "做得蛮好的，朋友都说好看"
+- "总体来说挺满意"`;
         
-        let userMsg = `请帮我写一个关于${category}的真实用户评价，大约${targetLength}字左右。`;
+        let userMsg = `写一个${category}的真实好评，${targetLength}字。`;
         if (staff) {
-          userMsg += `服务人员是${staff}。`;
+          userMsg += `做的是${staff}。`;
         }
-        userMsg += `\n\n要求：
-1. 语言自然真实，像真人写的，符合"${randomStyle}"的特点
-2. 避免"非常好"、"强烈推荐"等套话
-3. 可以包含具体的使用细节和服务人员
-4. 字数控制在${targetLength}字左右
-5. 不要加引号或表情符号
-6. 每次生成要有不同的切入点和表达方式
-7. 可以从不同角度切入：效果、服务、环境、性价比、技术等`;
+        userMsg += `\n\n【本次生成要求】
+1. 风格：${randomStyle.split('：')[0]}
+2. 切入点：${randomPerspective}
+3. 开头参考：${randomOpening}（不要照抄，自然引入）
+4. 细节亮点：${randomAspect}
+5. 句式结构：${randomStructure}
+6. 常用词汇：${randomVocabulary}
+7. 字数精确：${targetLength}字左右
+8. 口语自然：像手机打字聊天
+9. 避免模板化：每次表达方式完全不同
+10. 全是好评：但不要官方话术
+11. 格式：纯文本，无引号、无符号
+
+【特别提醒】
+- 全部正面评价，但用大白话
+- 不要写得像广告或官方文案
+- 像你自己去做完头发随手写的真实好评
+- 每次用词、句式、表达角度都要明显不同`;
         
         status.textContent = "AI正在生成评价...";
         
@@ -673,7 +990,12 @@
       
       const ok = await copyText(text);
       const platform = $("shopPlatform").value;
-      const platformName = platform === "meituan" ? "美团" : "抖音";
+      const platformNames = {
+        meituan: "美团",
+        dianping: "大众点评",
+        douyin: "抖音"
+      };
+      const platformName = platformNames[platform] || "店铺";
       
       if (ok) {
         // 如果在微信中，提示用户
