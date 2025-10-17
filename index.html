@@ -517,16 +517,9 @@
     // 平台深度链接配置
     const DEEP_LINKS = {
       meituan: "imeituan://www.meituan.com/food/poi/detail?id=1033453100",  // 美团店铺深度链接
-      dianping: "dianping://shopinfo?shopId=k6JZYlytyJ0q9Mz",  // 大众点评店铺深度链接（使用shopId参数）
+      dianping: "dianping://shopinfo?shopuuid=k6JZYlytyJ0q9Mze",  // 大众点评店铺深度链接
       douyin: "snssdk1128://poi/detail/?id=7375105554814863423"  // 抖音店铺深度链接
     };
-    
-    // 大众点评备用链接（如果第一个不行，可以尝试这些格式）
-    const DIANPING_BACKUP_LINKS = [
-      "dianping://shopinfo?shopId=k6JZYlytyJ0q9Mz",
-      "dianping://web?url=https://www.dianping.com/shop/k6JZYlytyJ0q9Mz",
-      "dianping://shopdetail?shopId=k6JZYlytyJ0q9Mz"
-    ];
     
     // 店铺信息配置
     const SHOP_INFO = {
@@ -537,7 +530,7 @@
         url: "http://dpurl.cn/ipWBl40z"  // 美团网页版链接
       },
       dianping: {
-        url: "https://www.dianping.com/shop/k6JZYlytyJ0q9Mz"  // 大众点评网页版链接（请替换为实际链接）
+        url: "https://www.dianping.com/shop/k6JZYlytyJ0q9Mze"  // 大众点评网页版链接
       },
       douyin: {
         url: ""  // 抖音网页版链接（如有）
@@ -994,7 +987,7 @@ ${randomPerspective}
         document.addEventListener('visibilitychange', handleVisibilityChange);
         
         // 3秒后检测，如果失败则尝试打开网页版
-        setTimeout(() => {
+            setTimeout(() => {
           if (iframe.parentNode) {
             document.body.removeChild(iframe);
           }
@@ -1005,7 +998,7 @@ ${randomPerspective}
             const webUrl = SHOP_INFO[platform]?.url;
             if (webUrl) {
               status.textContent = `⚠️ 深度链接调起失败，正在跳转到${platformName}网页版...\n\n${shopDetails}\n\n网页版会自动提示打开APP`;
-              setTimeout(() => {
+          setTimeout(() => {
                 window.location.href = webUrl;
               }, 500);
             } else {
