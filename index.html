@@ -266,42 +266,44 @@
       display: inline-flex; 
       align-items: center; 
       gap: 6px; 
-      font-size: 15px; 
-      color: #555; 
+      font-size: 14px; 
+      color: #4b5563; 
       cursor: pointer;
-      padding: 10px 16px;
-      background: #fff;
-      border-radius: 12px;
-      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      padding: 9px 14px;
+      background: linear-gradient(135deg, #ffffff 0%, #f9fafb 100%);
+      border-radius: 10px;
+      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
       border: 2px solid #e5e7eb;
       user-select: none;
       -webkit-user-select: none;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+      font-weight: 500;
     }
     .checkbox-label:hover {
       border-color: #c7d2fe;
-      box-shadow: 0 4px 12px rgba(99, 102, 241, 0.15);
+      box-shadow: 0 4px 12px rgba(99, 102, 241, 0.2);
+      transform: translateY(-1px);
     }
     .checkbox-label:active {
-      transform: scale(0.96);
+      transform: scale(0.97) translateY(0);
     }
     .checkbox-label input {
       margin: 0;
-      width: 18px;
-      height: 18px;
+      width: 17px;
+      height: 17px;
       cursor: pointer;
     }
     .checkbox-label input:checked {
       accent-color: #8b5cf6;
     }
     .checkbox-label:has(input:checked) {
-      background: linear-gradient(135deg, #f5f3ff 0%, #ede9fe 100%);
-      border-color: #8b5cf6;
-      box-shadow: 0 6px 16px rgba(139, 92, 246, 0.3), 0 0 20px rgba(139, 92, 246, 0.1);
+      background: linear-gradient(135deg, #faf5ff 0%, #f3e8ff 100%);
+      border-color: #a78bfa;
+      box-shadow: 0 4px 16px rgba(139, 92, 246, 0.3), 0 0 0 1px rgba(139, 92, 246, 0.1) inset;
       transform: translateY(-2px);
     }
     .checkbox-label:has(input:checked) span {
-      background: linear-gradient(135deg, #8b5cf6 0%, #d946ef 100%);
+      background: linear-gradient(135deg, #8b5cf6 0%, #a78bfa 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
@@ -406,77 +408,69 @@
     <div class="card">
       <h1>💬 评价文案生成</h1>
       
-      <!-- 操作提示 -->
-      <div style="background: linear-gradient(135deg, #e0f2fe 0%, #dbeafe 100%); border-left: 4px solid #3b82f6; padding: 12px 16px; border-radius: 10px; margin-bottom: 16px; font-size: 13px; line-height: 1.8; color: #1e40af;">
-        <div style="font-weight: 700; margin-bottom: 6px; display: flex; align-items: center; gap: 6px;">
-          <span style="font-size: 16px;">💡</span> 使用说明
-        </div>
-        <div style="color: #1e3a8a;">
-          1️⃣ 选择服务类目（可多选）<br>
-          2️⃣ 输入服务人员名字（可选）<br>
-          3️⃣ 点击"生成文案"获取评价<br>
-          4️⃣ 点击"复制并跳转"一键完成
-        </div>
-      </div>
-      
-      <div style="display: flex; gap: 12px; margin: 16px 0;">
-        <div style="flex: 1;">
-          <label style="margin: 0 0 8px; display: flex; align-items: center; gap: 6px;">
+      <div style="margin: 16px 0;">
+        <div>
+          <label style="margin: 0 0 10px; display: flex; align-items: center; gap: 6px; font-size: 15px; font-weight: 600; color: #374151;">
             <span>✂️ 服务类目</span>
-            <span style="font-size: 11px; color: #8b5cf6; background: #f3e8ff; padding: 2px 8px; border-radius: 6px; font-weight: 600;">可多选</span>
+            <span style="font-size: 11px; color: #8b5cf6; background: linear-gradient(135deg, #f3e8ff 0%, #e9d5ff 100%); padding: 3px 10px; border-radius: 20px; font-weight: 600; box-shadow: 0 2px 6px rgba(139, 92, 246, 0.2);">可多选</span>
           </label>
-          <div class="checkbox-group" style="gap: 6px;">
-            <label class="checkbox-label" style="padding: 6px 10px; font-size: 13px;">
+          <div class="checkbox-group">
+            <label class="checkbox-label">
               <input type="checkbox" value="剪发"><span>剪发</span>
         </label>
-            <label class="checkbox-label" style="padding: 6px 10px; font-size: 13px;">
+            <label class="checkbox-label">
               <input type="checkbox" value="烫发"><span>烫发</span>
         </label>
-            <label class="checkbox-label" style="padding: 6px 10px; font-size: 13px;">
+            <label class="checkbox-label">
               <input type="checkbox" value="染发"><span>染发</span>
         </label>
-            <label class="checkbox-label" style="padding: 6px 10px; font-size: 13px;">
+            <label class="checkbox-label">
               <input type="checkbox" value="护理"><span>护理</span>
         </label>
-            <label class="checkbox-label" style="padding: 6px 10px; font-size: 13px;">
+            <label class="checkbox-label">
               <input type="checkbox" value="造型"><span>造型</span>
         </label>
           </div>
         </div>
       </div>
 
-      <div style="display: flex; gap: 12px; margin: 12px 0;">
-        <div style="flex: 1;">
-          <label style="margin: 0 0 8px;">👤 服务人员 <span style="color: #999; font-size: 12px; font-weight: 400;">(可选)</span></label>
-          <div class="checkbox-group" style="gap: 6px;">
-            <label class="checkbox-label" style="padding: 6px 10px; font-size: 13px;">
+      <div style="margin: 16px 0;">
+        <div>
+          <label style="margin: 0 0 10px; display: flex; align-items: center; gap: 6px; font-size: 15px; font-weight: 600; color: #374151;">
+            <span>👤 服务人员</span>
+            <span style="font-size: 11px; color: #10b981; background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%); padding: 3px 10px; border-radius: 20px; font-weight: 600; box-shadow: 0 2px 6px rgba(16, 185, 129, 0.2);">可选</span>
+          </label>
+          <div class="checkbox-group">
+            <label class="checkbox-label">
               <input type="checkbox" value="薇薇老师"><span>薇薇老师</span>
         </label>
-            <label class="checkbox-label" style="padding: 6px 10px; font-size: 13px;">
+            <label class="checkbox-label">
               <input type="checkbox" value="赵老师"><span>赵老师</span>
         </label>
-            <label class="checkbox-label" style="padding: 6px 10px; font-size: 13px;">
+            <label class="checkbox-label">
               <input type="checkbox" value="李老师"><span>李老师</span>
         </label>
-            <label class="checkbox-label" style="padding: 6px 10px; font-size: 13px;">
+            <label class="checkbox-label">
               <input type="checkbox" value="洋子老师"><span>洋子老师</span>
         </label>
-            <label class="checkbox-label" style="padding: 6px 10px; font-size: 13px;">
+            <label class="checkbox-label">
               <input type="checkbox" value="小杰"><span>小杰</span>
         </label>
           </div>
         </div>
       </div>
 
-      <label for="shopPlatform" style="margin: 12px 0 8px; display: flex; align-items: center; gap: 6px;">
-        <span>🏪 跳转平台</span>
-        <span style="font-size: 11px; color: #10b981; background: #d1fae5; padding: 2px 8px; border-radius: 6px; font-weight: 600;">自动调起APP</span>
-      </label>
+      <div style="margin: 16px 0;">
+        <label for="shopPlatform" style="margin: 0 0 10px; display: flex; align-items: center; gap: 6px; font-size: 15px; font-weight: 600; color: #374151;">
+          <span>🏪 跳转平台</span>
+          <span style="font-size: 11px; color: #3b82f6; background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%); padding: 3px 10px; border-radius: 20px; font-weight: 600; box-shadow: 0 2px 6px rgba(59, 130, 246, 0.2);">自动调起APP</span>
+        </label>
       <select id="shopPlatform">
-        <option value="meituan">💇 美团美发</option>
-        <option value="dianping">⭐ 大众点评</option>
-        <option value="douyin">🎵 抖音</option>
+          <option value="meituan">💇 美团</option>
+          <option value="dianping">⭐ 大众点评</option>
+          <option value="douyin">🎵 抖音</option>
       </select>
+      </div>
 
       <div class="actions" style="margin-top: 16px; gap: 10px;">
         <button id="btnGen" class="btn-primary">✨ 生成文案</button>
@@ -487,11 +481,14 @@
       <div id="status" class="muted"></div>
       
       <!-- 底部提示 -->
-      <div style="background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%); border-radius: 10px; padding: 10px 14px; margin-top: 12px; font-size: 12px; color: #92400e; line-height: 1.6; border: 1px solid #fbbf24;">
-        <div style="font-weight: 700; margin-bottom: 4px;">⚠️ 温馨提示</div>
-        <div>• 在微信中打开需跳转到浏览器使用</div>
-        <div>• 跳转前请确保已安装对应平台APP</div>
-        <div>• 每次生成的文案风格都不同，可多次生成</div>
+      <div style="background: linear-gradient(135deg, #fff7ed 0%, #ffedd5 100%); border-radius: 12px; padding: 12px 16px; margin-top: 16px; font-size: 12px; color: #9a3412; line-height: 1.8; border: 2px solid #fed7aa; box-shadow: 0 2px 8px rgba(251, 146, 60, 0.1);">
+        <div style="display: flex; gap: 8px; align-items: flex-start;">
+          <span style="font-size: 16px; flex-shrink: 0;">💡</span>
+          <div>
+            <div style="font-weight: 600; color: #7c2d12; margin-bottom: 4px;">温馨提示</div>
+            <div style="color: #9a3412;">微信中需跳转浏览器 · 需安装对应APP · 可多次生成不同风格</div>
+          </div>
+        </div>
       </div>
     </div>
     <div class="footer">使用 DeepSeek AI 智能生成，无需配置直接使用</div>
